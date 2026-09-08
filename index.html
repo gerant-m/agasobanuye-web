@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AGASOBANUYE.NET</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:radial-gradient(circle,#111,#000);
+color:white;
+}
+
+/* HEADER */
+header{
+background:#000;
+padding:18px;
+text-align:center;
+color:#ff2a2a;
+font-size:24px;
+position:relative;
+font-weight:bold;
+}
+
+.logo{
+position:absolute;
+left:15px;
+top:8px;
+height:70px;
+}
+
+/* MENU ICON */
+.menuIcon{
+position:absolute;
+right:15px;
+top:18px;
+font-size:24px;
+cursor:pointer;
+}
+
+/* SIDE MENU */
+.sideMenu{
+position:fixed;
+right:0;
+top:0;
+width:260px;
+height:100%;
+background:#0d0d0d;
+padding:15px;
+transform:translateX(100%);
+transition:0.3s;
+z-index:999;
+border-left:1px solid #222;
+}
+
+.sideMenu.active{
+transform:translateX(0);
+}
+
+.sideMenu h3{
+color:#ff2a2a;
+}
+
+select{
+width:100%;
+padding:10px;
+margin:8px 0;
+background:#111;
+color:white;
+border:1px solid #333;
+border-radius:8px;
+}
+
+/* NAV */
+.nav{
+display:flex;
+justify-content:center;
+gap:20px;
+background:#111;
+padding:12px;
+}
+
+.nav div{
+cursor:pointer;
+color:#ccc;
+}
+
+.nav div:hover{
+color:#ff2a2a;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:15px;
+padding:15px;
+}
+
+.card{
+background:#111;
+border-radius:10px;
+overflow:hidden;
+cursor:pointer;
+border:1px solid #222;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.card p{
+text-align:center;
+padding:8px;
+}
+
+/* WATCH */
+video{
+width:95%;
+margin:20px auto;
+display:block;
+border-radius:10px;
+}
+
+/* FOOTER */
+footer{
+background:#0d0d0d;
+padding:30px;
+text-align:center;
+border-top:1px solid #222;
+margin-top:30px;
+}
+
+.btn{
+padding:10px;
+margin:5px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.call{background:#00c853;color:white;}
+.wa{background:#25D366;color:white;}
+
+/* SOCIAL */
+.social i{
+font-size:24px;
+margin:10px;
+transition:0.3s;
+}
+
+.social i:hover{
+transform:scale(1.2);
+}
+
+.fa-whatsapp{color:#25D366;}
+.fa-instagram{color:#e1306c;}
+.fa-facebook{color:#1877f2;}
+.fa-tiktok{color:#fff;}
+.fa-youtube{color:#ff0000;}
+
+.tag{
+margin-top:10px;
+color:#777;
+font-size:13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="gerant66.png" class="logo">
+🎬 AGASOBANUYE.NET
+<div class="menuIcon" onclick="toggleMenu()">☰</div>
+</header>
+
+<!-- SIDE MENU -->
+<div class="sideMenu" id="menu">
+
+<h3>🎬 GENRE</h3>
+<select onchange="filterGenre(this.value)">
+<option value="">All Movies</option>
+<option>Indian</option>
+<option>Action</option>
+<option>Horror</option>
+<option>Comedy</option>
+<option>Drama</option>
+</select>
+
+<h3>🎤 INTERPRETERS</h3>
+<select onchange="filterInterp(this.value)">
+<option value="">All</option>
+<option>Rocky</option>
+<option>Junior</option>
+<option>Siniya</option>
+<option>Sankara</option>
+<option>Gaheza</option>
+<option>Savimbi</option>
+<option>Fey</option>
+<option>Kimu</option>
+<option>Skov</option>
+<option>Dyran</option>
+</select>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+<div onclick="show('home')">Home</div>
+<div onclick="show('movies')">Movies</div>
+<div onclick="show('series')">Series</div>
+<div onclick="show('watch')">Watch</div>
+</div>
+
+<!-- HOME -->
+<div id="home">
+<div class="grid" id="homeList"></div>
+</div>
+
+<!-- MOVIES -->
+<div id="movies" style="display:none;">
+<div class="grid" id="moviesList"></div>
+</div>
+
+<!-- SERIES -->
+<div id="series" style="display:none;">
+<div class="grid" id="seriesList"></div>
+</div>
+
+<!-- WATCH -->
+<div id="watch" style="display:none;">
+<h2 id="title" style="text-align:center;"></h2>
+<video id="player" controls></video>
+</div>
+
+<!-- FOOTER -->
+<footer>
+
+<a href="tel:+250794186614">
+<button class="btn call">📞 CALL</button>
+</a>
+
+<a href="https://wa.me/250794186614">
+<button class="btn wa">💬 WHATSAPP</button>
+</a>
+
+<p>📍 Kigali, Gasabo</p>
+
+<!-- SOCIAL LINKS FIXED -->
+<div class="social">
+
+<a href="https://wa.me/250794186614" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<a href="https://www.instagram.com/gerant_11" target="_blank"><i class="fab fa-instagram"></i></a>
+
+<a href="https://www.facebook.com/gerant_11" target="_blank"><i class="fab fa-facebook"></i></a>
+
+<a href="https://www.tiktok.com/@gerant_11" target="_blank"><i class="fab fa-tiktok"></i></a>
+
+<a href="https://www.youtube.com/@gerant_11" target="_blank"><i class="fab fa-youtube"></i></a>
+
+</div>
+
+<div class="tag">
+gerant_11
+</div>
+
+</footer>
+
+<script>
+
+/* MENU */
+function toggleMenu(){
+document.getElementById("menu").classList.toggle("active");
+}
+
+/* DATA */
+let movies=[
+{title:"PELE ROCKY",file:"PELE.mp4",img:"PELE.JPG",genre:"Action",interp:"Rocky"},
+{title:"ROSARIO:rocky",file:"Rosario.mp4",img:"Rosario.jpg",genre:"action",interp:"Sankara"},
+{title:"PROTECTOR:gaheza",file:".mp4",img:"PROTECTOR.jpg",genre:"Horror",interp:"Gaheza"}
+];
+
+let series=[];
+
+/* LOAD */
+function load(){
+document.getElementById("homeList").innerHTML=[...movies].map(card).join("");
+document.getElementById("moviesList").innerHTML=movies.map(card).join("");
+document.getElementById("seriesList").innerHTML=series.map(card).join("");
+}
+
+/* CARD */
+function card(m){
+return `<div class="card" onclick="openMovie('${m.title}','${m.file}')">
+<img src="${m.img}">
+<p>${m.title}</p>
+</div>`;
+}
+
+/* OPEN */
+function openMovie(t,f){
+document.getElementById("player").src=f;
+document.getElementById("title").innerText=t;
+show('watch');
+}
+
+/* SHOW */
+function show(id){
+['home','movies','series','watch'].forEach(x=>{
+document.getElementById(x).style.display='none';
+});
+document.getElementById(id).style.display='block';
+}
+
+/* FILTER */
+function filterGenre(g){
+let f=movies.filter(m=>m.genre==g || g=="");
+document.getElementById("moviesList").innerHTML=f.map(card).join("");
+show('movies');
+}
+
+function filterInterp(i){
+let f=movies.filter(m=>m.interp==i || i=="");
+document.getElementById("moviesList").innerHTML=f.map(card).join("");
+show('movies');
+}
+
+load();
+
+</script>
+
+</body>
+</html>
