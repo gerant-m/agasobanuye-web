@@ -2,346 +2,328 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AGASOBANUYE.NET</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGASOBANUYE.NET | Movies & Series</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#070b12;--bg2:#0d1420;--card:#111a28;--card2:#172335;--border:#26364d;--text:#fff;--muted:#98a6b8;--blue:#4f8cff;--purple:#7656ff;--gold:#ffc94a;--green:#25D366}
+html{scroll-behavior:smooth}
+body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top,#17253b 0%,#0b111b 45%,#070b12 100%);color:#fff;min-height:100vh}
+header{position:sticky;top:0;z-index:1000;background:rgba(7,11,18,.96);backdrop-filter:blur(15px);border-bottom:1px solid var(--border)}
+.headerContent{max-width:1400px;margin:auto;padding:13px 22px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+.brandIcon{width:45px;height:45px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--blue),var(--purple));box-shadow:0 10px 25px rgba(79,140,255,.3)}
+.brandName{font-size:21px;font-weight:bold}.brandName span{color:var(--gold)}
+.searchBox{background:#121b29;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;padding:10px 14px;gap:10px}
+.searchBox input{width:230px;border:none;outline:none;background:transparent;color:#fff}.searchBox input::placeholder{color:#7f8da0}
+main{max-width:1400px;margin:auto;padding:25px 20px 100px}
+.hero{min-height:330px;border-radius:20px;overflow:hidden;position:relative;border:1px solid var(--border);margin-bottom:25px;background:linear-gradient(110deg,#14223a,#101827,#0a1019)}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%}
+.hero:before{width:550px;height:550px;right:-200px;top:-180px;background:radial-gradient(circle,rgba(79,140,255,.4),transparent 70%)}
+.hero:after{width:350px;height:350px;left:-100px;bottom:-150px;background:radial-gradient(circle,rgba(118,86,255,.25),transparent 70%)}
+.heroContent{position:relative;z-index:2;padding:60px 45px;max-width:650px}
+.badge{display:inline-block;padding:8px 14px;border-radius:30px;background:rgba(79,140,255,.12);border:1px solid rgba(79,140,255,.35);color:#dce8ff;font-size:12px}
+.hero h1{font-size:48px;margin:18px 0 12px}.hero p{color:#b7c3d4;line-height:1.7;max-width:520px}
+.filterBox{background:rgba(17,26,40,.95);border:1px solid var(--border);border-radius:17px;padding:20px;margin-bottom:25px}
+.filterTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}
+.resetBtn{background:#202d41;border:none;color:#fff;padding:10px 15px;border-radius:9px;cursor:pointer}
+.filterGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.filterItem label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}
+.filterItem select{width:100%;padding:12px;border-radius:9px;background:#0a1019;border:1px solid var(--border);color:#fff;outline:none}
+.tabs{display:flex;gap:10px;margin-bottom:25px;overflow-x:auto}
+.tabs button{padding:12px 20px;border-radius:10px;border:1px solid var(--border);background:#111a28;color:#aeb9c8;cursor:pointer;white-space:nowrap}
+.tabs button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.sectionHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.sectionTitle{font-size:23px;padding-left:13px;position:relative}.sectionTitle:before{content:"";width:4px;height:25px;background:var(--blue);border-radius:10px;position:absolute;left:0}
+.movieCount{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:15px;overflow:hidden;transition:.3s}
+.card:hover{transform:translateY(-7px);background:var(--card2);border-color:var(--blue);box-shadow:0 20px 45px rgba(0,0,0,.45)}
+.poster{height:270px;position:relative;overflow:hidden;cursor:pointer}.poster img{width:100%;height:100%;object-fit:cover}
+.typeBadge{position:absolute;top:10px;left:10px;padding:6px 9px;border-radius:7px;background:rgba(0,0,0,.75);font-size:10px}
+.cardInfo{padding:13px}.movieTitle{font-size:15px;margin-bottom:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.movieMeta{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-bottom:10px}
+.interpreter{padding:9px;border-radius:8px;background:rgba(79,140,255,.08);border:1px solid rgba(79,140,255,.18);margin-bottom:11px;font-size:11px}.interpreter i{color:var(--gold)}
+.cardButtons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.watchBtn,.downloadBtn{border:none;padding:10px 5px;border-radius:8px;color:#fff;cursor:pointer;font-size:11px;text-decoration:none;text-align:center}
+.watchBtn{background:var(--blue)}.downloadBtn{background:#26364d}
+.empty{grid-column:1/-1;padding:70px;text-align:center;color:var(--muted)}
+.watchPage,.episodePage{display:none;max-width:1050px;margin:auto}
+.backBtn{border:none;background:#26364d;color:#fff;padding:11px 16px;border-radius:9px;cursor:pointer;margin-bottom:15px}
+.videoBox{background:#000;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+video{width:100%;display:block}.watchInfo{background:var(--card);padding:22px;border-radius:0 0 16px 16px}.watchInfo p{color:var(--muted);margin-top:9px}
+.episodeGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:20px}
+.episodeCard{background:var(--card);padding:15px;border:1px solid var(--border);border-radius:12px}.episodeCard button{width:100%;padding:10px;border:none;border-radius:8px;background:var(--blue);color:#fff;cursor:pointer}
+.episodeCard .downloadBtn{display:block;width:100%}
+footer{background:#060a10;border-top:1px solid var(--border);padding:45px 20px 100px;text-align:center}
+.footerLogo{font-size:24px;font-weight:bold}.footerLogo span{color:var(--gold)}footer p{color:var(--muted);margin:10px}
+.social{margin:18px 0}.social a{width:45px;height:45px;display:inline-flex;justify-content:center;align-items:center;border-radius:11px;background:#172335;color:#fff;text-decoration:none;margin:5px}
+.floatingWhatsapp{position:fixed;right:22px;bottom:25px;width:62px;height:62px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#25D366;color:#fff;text-decoration:none;font-size:30px;z-index:9999;box-shadow:0 12px 30px rgba(37,211,102,.4);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.6)}70%{box-shadow:0 0 0 18px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+@media(max-width:850px){.filterGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.headerContent{padding:12px}.brandName{font-size:15px}.searchBox input{width:110px}main{padding:16px 12px 100px}.heroContent{padding:45px 25px}.hero h1{font-size:32px}.filterGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr);gap:12px}.poster{height:220px}.floatingWhatsapp{right:16px;bottom:18px}}
 
-body{
-margin:0;
-font-family:Arial;
-background:radial-gradient(circle,#111,#000);
-color:white;
-}
+.helpPayment{margin-top:25px;max-width:360px}
+.helpTitle{font-size:15px;font-weight:700;color:#fff;margin-bottom:10px}
+.momoBtn{width:100%;border:1px solid rgba(255,201,74,.45);background:rgba(255,201,74,.08);color:#fff;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;transition:.25s}
+.momoBtn:hover{transform:translateY(-2px);border-color:var(--gold);background:rgba(255,201,74,.14)}
+.momoLabel{background:var(--gold);color:#111;padding:5px 8px;border-radius:6px;font-size:10px;font-weight:800}
+.momoBtn i{color:var(--gold);margin-left:auto}
+.momoBtn span:last-child{font-size:11px;color:#d8dee8}
+.momoNumber{margin-top:10px;padding:13px 15px;border-radius:10px;background:#101a28;border:1px solid var(--gold);color:#fff;font-size:18px;font-weight:800;letter-spacing:1px}
+.momoNumber i{color:var(--gold);margin-right:8px}
 
-/* HEADER */
-header{
-background:#000;
-padding:18px;
-text-align:center;
-color:#ff2a2a;
-font-size:24px;
-position:relative;
-font-weight:bold;
-}
-
-.logo{
-position:absolute;
-left:15px;
-top:8px;
-height:70px;
-}
-
-/* MENU ICON */
-.menuIcon{
-position:absolute;
-right:15px;
-top:18px;
-font-size:24px;
-cursor:pointer;
-}
-
-/* SIDE MENU */
-.sideMenu{
-position:fixed;
-right:0;
-top:0;
-width:260px;
-height:100%;
-background:#0d0d0d;
-padding:15px;
-transform:translateX(100%);
-transition:0.3s;
-z-index:999;
-border-left:1px solid #222;
-}
-
-.sideMenu.active{
-transform:translateX(0);
-}
-
-.sideMenu h3{
-color:#ff2a2a;
-}
-
-select{
-width:100%;
-padding:10px;
-margin:8px 0;
-background:#111;
-color:white;
-border:1px solid #333;
-border-radius:8px;
-}
-
-/* NAV */
-.nav{
-display:flex;
-justify-content:center;
-gap:20px;
-background:#111;
-padding:12px;
-}
-
-.nav div{
-cursor:pointer;
-color:#ccc;
-}
-
-.nav div:hover{
-color:#ff2a2a;
-}
-
-/* GRID */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:15px;
-padding:15px;
-}
-
-.card{
-background:#111;
-border-radius:10px;
-overflow:hidden;
-cursor:pointer;
-border:1px solid #222;
-transition:0.3s;
-}
-
-.card:hover{
-transform:scale(1.05);
-}
-
-.card img{
-width:100%;
-height:180px;
-object-fit:cover;
-}
-
-.card p{
-text-align:center;
-padding:8px;
-}
-
-/* WATCH */
-video{
-width:95%;
-margin:20px auto;
-display:block;
-border-radius:10px;
-}
-
-/* FOOTER */
-footer{
-background:#0d0d0d;
-padding:30px;
-text-align:center;
-border-top:1px solid #222;
-margin-top:30px;
-}
-
-.btn{
-padding:10px;
-margin:5px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-}
-
-.call{background:#00c853;color:white;}
-.wa{background:#25D366;color:white;}
-
-/* SOCIAL */
-.social i{
-font-size:24px;
-margin:10px;
-transition:0.3s;
-}
-
-.social i:hover{
-transform:scale(1.2);
-}
-
-.fa-whatsapp{color:#25D366;}
-.fa-instagram{color:#e1306c;}
-.fa-facebook{color:#1877f2;}
-.fa-tiktok{color:#fff;}
-.fa-youtube{color:#ff0000;}
-
-.tag{
-margin-top:10px;
-color:#777;
-font-size:13px;
-}
-
+.featuredMovies{margin:28px 0 30px;padding:20px;border:1px solid var(--border);background:rgba(13,20,32,.88);border-radius:17px;overflow:hidden}
+.featuredHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.featuredTitle{font-size:21px;padding-left:13px;position:relative}.featuredTitle:before{content:"";position:absolute;left:0;top:2px;width:4px;height:23px;background:var(--gold);border-radius:8px}
+.featuredHint{font-size:11px;color:var(--muted)}
+.featuredRow{display:flex;gap:14px;overflow-x:auto;scroll-behavior:smooth;padding:3px 2px 10px;scrollbar-width:thin}
+.featuredCard{flex:0 0 155px;background:var(--card);border:1px solid var(--border);border-radius:13px;overflow:hidden;cursor:pointer;transition:.25s}
+.featuredCard:hover{transform:translateY(-5px);border-color:var(--gold);box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.featuredPoster{height:220px;position:relative}.featuredPoster img{width:100%;height:100%;object-fit:cover;display:block}
+.featuredPlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(transparent,rgba(0,0,0,.55));opacity:0;transition:.2s;font-size:30px;color:#fff}
+.featuredCard:hover .featuredPlay{opacity:1}.featuredInfo{padding:10px}.featuredName{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.featuredMeta{font-size:10px;color:var(--muted);margin-top:6px}
+@media(max-width:600px){.featuredMovies{padding:15px}.featuredCard{flex-basis:140px}.featuredPoster{height:195px}.featuredHint{display:none}}
 </style>
 </head>
-
 <body>
+<header><div class="headerContent">
+<div class="brand" onclick="goHome()"><div class="brandIcon"><i class="fa-solid fa-play"></i></div><div class="brandName">AGASOBANUYE<span>.NET</span></div></div>
+<div class="searchBox"><i class="fa-solid fa-magnifying-glass"></i><input id="searchInput" type="text" placeholder="Search movie..." oninput="applyFilters()"></div>
+</div></header>
 
-<header>
-<img src="gerant66.png" class="logo">
-🎬 AGASOBANUYE.NET
-<div class="menuIcon" onclick="toggleMenu()">☰</div>
-</header>
+<main>
+<section class="hero" id="hero"><div class="heroContent">
+<div class="badge">🎬 AGASOBANUYE.NET</div>
+<h1>Welcome to Kega Store</h1>
+<p>Reba kandi ukuremo filime na series z'Agasobanuye mu Kinyarwanda, ziri kumwe n'abasobanuzi bakunzwe.</p>
+<div class="helpPayment">
+    <div class="helpTitle">For Help</div>
+    <button class="momoBtn" onclick="showMobileMoney()">
+        <span class="momoLabel">MOBILE MONEY</span>
+        <i class="fa-solid fa-phone"></i>
+        <span>Tap to see number</span>
+    </button>
+    <div id="momoNumber" class="momoNumber" style="display:none;">
+        <i class="fa-solid fa-mobile-screen-button"></i>
+        +250794186614
+    </div>
+</div>
+</div></section>
 
-<!-- SIDE MENU -->
-<div class="sideMenu" id="menu">
+<section class="featuredMovies" id="featuredMovies">
+  <div class="featuredHeader">
+    <h2 class="featuredTitle">🔥 Movies Trending</h2>
+    <span class="featuredHint">Scroll → urebe izindi</span>
+  </div>
+  <div class="featuredRow" id="featuredRow"></div>
+</section>
 
-<h3>🎬 GENRE</h3>
-<select onchange="filterGenre(this.value)">
-<option value="">All Movies</option>
-<option>Indian</option>
-<option>Action</option>
-<option>Horror</option>
-<option>Comedy</option>
-<option>Drama</option>
-</select>
+<section class="filterBox" id="filterBox">
+<div class="filterTop"><h2><i class="fa-solid fa-sliders"></i> Filter Movies</h2><button class="resetBtn" onclick="resetFilters()">Reset</button></div>
+<div class="filterGrid">
+<div class="filterItem"><label>Year</label><select id="yearFilter" onchange="applyFilters()"><option value="">All Years</option><option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option></select></div>
+<div class="filterItem"><label>Genre</label><select id="genreFilter" onchange="applyFilters()"><option value="">All Genres</option><option>Action</option><option>Drama</option><option>Horror</option><option>Comedy</option><option>Romance</option><option>Adventure</option><option>Indian</option></select></div>
+<div class="filterItem"><label>interpretor</label><select id="interpreterFilter" onchange="applyFilters()"><option value="">All Interpreters</option><option>Rocky</option><option>Junior</option><option>Siniya</option><option>Sankara</option><option>Gaheza</option><option>Savimbi</option><option>Fey</option><option>Kimu</option><option>Skov</option><option>Dyran</option></select></div>
+<div class="filterItem"><label>Sort</label><select id="sortFilter" onchange="applyFilters()"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="az">A - Z</option><option value="rating">Highest Rating</option></select></div>
+</div></section>
 
-<h3>🎤 INTERPRETERS</h3>
-<select onchange="filterInterp(this.value)">
-<option value="">All</option>
-<option>Rocky</option>
-<option>Junior</option>
-<option>Siniya</option>
-<option>Sankara</option>
-<option>Gaheza</option>
-<option>Savimbi</option>
-<option>Fey</option>
-<option>Kimu</option>
-<option>Skov</option>
-<option>Dyran</option>
-</select>
-
+<div class="tabs" id="tabs">
+<button class="active" onclick="setCategory('all',this)"><i class="fa-solid fa-layer-group"></i> All Movies</button>
+<button onclick="setCategory('movie',this)"><i class="fa-solid fa-film"></i> Movies</button>
+<button onclick="setCategory('series',this)"><i class="fa-solid fa-tv"></i> Series</button>
 </div>
 
-<!-- NAV -->
-<div class="nav">
-<div onclick="show('home')">Home</div>
-<div onclick="show('movies')">Movies</div>
-<div onclick="show('series')">Series</div>
-<div onclick="show('watch')">Watch</div>
-</div>
-
-<!-- HOME -->
-<div id="home">
-<div class="grid" id="homeList"></div>
-</div>
-
-<!-- MOVIES -->
-<div id="movies" style="display:none;">
+<section id="moviesSection">
+<div class="sectionHeader"><h2 class="sectionTitle" id="sectionTitle">All Movies</h2><span class="movieCount" id="movieCount">0 Results</span></div>
 <div class="grid" id="moviesList"></div>
-</div>
+</section>
 
-<!-- SERIES -->
-<div id="series" style="display:none;">
-<div class="grid" id="seriesList"></div>
-</div>
+<section id="watchPage" class="watchPage">
+<button class="backBtn" onclick="backToMovies()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+<div class="videoBox"><video id="player" controls playsinline></video></div>
+<div class="watchInfo"><h2 id="watchTitle"></h2><p id="watchDetails"></p><p id="watchInterpreter"></p></div>
+</section>
 
-<!-- WATCH -->
-<div id="watch" style="display:none;">
-<h2 id="title" style="text-align:center;"></h2>
-<video id="player" controls></video>
-</div>
+<section id="episodePage" class="episodePage">
+<button class="backBtn" onclick="backToMovies()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+<div class="watchInfo"><h2 id="seriesTitle"></h2><p id="seriesDetails"></p><div class="episodeGrid" id="episodeList"></div></div>
+</section>
+</main>
 
-<!-- FOOTER -->
 <footer>
-
-<a href="tel:+250794186614">
-<button class="btn call">📞 CALL</button>
-</a>
-
-<a href="https://wa.me/250794186614">
-<button class="btn wa">💬 WHATSAPP</button>
-</a>
-
-<p>📍 Kigali, Gasabo</p>
-
-<!-- SOCIAL LINKS FIXED -->
+<div class="footerLogo">AGASOBANUYE<span>.NET</span></div>
+<p>Movies & Series translated in Kinyarwanda.</p>
 <div class="social">
-
-<a href="https://wa.me/250794186614" target="_blank"><i class="fab fa-whatsapp"></i></a>
-
-<a href="https://www.instagram.com/gerant_11" target="_blank"><i class="fab fa-instagram"></i></a>
-
-<a href="https://www.facebook.com/gerant_11" target="_blank"><i class="fab fa-facebook"></i></a>
-
-<a href="https://www.tiktok.com/@gerant_11" target="_blank"><i class="fab fa-tiktok"></i></a>
-
-<a href="https://www.youtube.com/@gerant_11" target="_blank"><i class="fab fa-youtube"></i></a>
-
+<a href="https://www.instagram.com/kega_update" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
+<a href="https://www.youtube.com/channel/UCtpthNrp5wuGa2PbFQPTGKg" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
 </div>
-
-<div class="tag">
-gerant_11
-</div>
-
+<p>Instagram: @kega_update</p><p style="font-size:12px">© 2026 AGASOBANUYE.NET</p>
 </footer>
 
+<a href="https://wa.me/250794186614" target="_blank" rel="noopener" class="floatingWhatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+
 <script>
+let currentCategory="all";
 
-/* MENU */
-function toggleMenu(){
-document.getElementById("menu").classList.toggle("active");
-}
-
-/* DATA */
-let movies=[
-{title:"PELE ROCKY",file:"PELE.mp4",img:"PELE.JPG",genre:"Action",interp:"Rocky"},
-{title:"ROSARIO:rocky",file:"Rosario.mp4",img:"Rosario.jpg",genre:"action",interp:"Sankara"},
-{title:"PROTECTOR:gaheza",file:".mp4",img:"PROTECTOR.jpg",genre:"Horror",interp:"Gaheza"}
+const movies=[
+{title:"alpha",type:"movie",file:"ALPHA_B.mp4",img:"images/ALPHA.jpg",year:2026,genre:"Action",interpreter:"Rocky",rating:9.2},
+{title:"MOVIE 02",type:"movie",file:"movie02.mp4",img:"images/movie02.jpg",year:2025,genre:"Drama",interpreter:"Junior",rating:8.7},
+{title:"MOVIE 03",type:"movie",file:"movie03.mp4",img:"images/movie03.jpg",year:2024,genre:"Action",interpreter:"Sankara",rating:8.9},
+{title:"MOVIE 04",type:"movie",file:"movie04.mp4",img:"images/movie04.jpg",year:2026,genre:"Horror",interpreter:"Gaheza",rating:8.3},
+{title:"MOVIE 05",type:"movie",file:"movie05.mp4",img:"images/movie05.jpg",year:2023,genre:"Comedy",interpreter:"Siniya",rating:8.1},
+{title:"MOVIE 06",type:"movie",file:"movie06.mp4",img:"images/movie06.jpg",year:2025,genre:"Romance",interpreter:"Savimbi",rating:8.5},
+{title:"MOVIE 07",type:"movie",file:"movie07.mp4",img:"images/movie07.jpg",year:2024,genre:"Adventure",interpreter:"Fey",rating:8.4},
+{title:"MOVIE 08",type:"movie",file:"movie08.mp4",img:"images/movie08.jpg",year:2022,genre:"Indian",interpreter:"Kimu",rating:8.0},
+{title:"MOVIE 09",type:"movie",file:"movie09.mp4",img:"images/movie09.jpg",year:2021,genre:"Drama",interpreter:"Skov",rating:7.9},
+{title:"MOVIE 10",type:"movie",file:"movie10.mp4",img:"images/movie10.jpg",year:2026,genre:"Action",interpreter:"Dyran",rating:9.0},
+{title:"MOVIE 11",type:"movie",file:"movie11.mp4",img:"images/movie11.jpg",year:2025,genre:"Horror",interpreter:"Rocky",rating:8.2},
+{title:"MOVIE 12",type:"movie",file:"movie12.mp4",img:"images/movie12.jpg",year:2024,genre:"Drama",interpreter:"Junior",rating:8.6},
+{title:"MOVIE 13",type:"movie",file:"movie13.mp4",img:"images/movie13.jpg",year:2023,genre:"Action",interpreter:"Sankara",rating:8.8},
+{title:"MOVIE 14",type:"movie",file:"movie14.mp4",img:"images/movie14.jpg",year:2026,genre:"Romance",interpreter:"Gaheza",rating:8.4},
+{title:"MOVIE 15",type:"movie",file:"movie15.mp4",img:"images/movie15.jpg",year:2022,genre:"Comedy",interpreter:"Siniya",rating:8.0},
+{title:"MOVIE 16",type:"movie",file:"movie16.mp4",img:"images/movie16.jpg",year:2021,genre:"Adventure",interpreter:"Savimbi",rating:7.8},
+{title:"MOVIE 17",type:"movie",file:"movie17.mp4",img:"images/movie17.jpg",year:2025,genre:"Indian",interpreter:"Fey",rating:8.5},
+{title:"MOVIE 18",type:"movie",file:"movie18.mp4",img:"images/movie18.jpg",year:2024,genre:"Horror",interpreter:"Kimu",rating:8.2},
+{title:"MOVIE 19",type:"movie",file:"movie19.mp4",img:"images/movie19.jpg",year:2023,genre:"Action",interpreter:"Skov",rating:8.7},
+{title:"MOVIE 20",type:"movie",file:"movie20.mp4",img:"images/movie20.jpg",year:2026,genre:"Drama",interpreter:"Dyran",rating:9.1},
+{title:"AGENT KIM",type:"series",img:"images/agent kim.jpg",year:2026,genre:"Action",interpreter:"Rocky",rating:9.5,episodes:["agent-kim-ep1.mp4","agent-kim-ep2.mp4","agent-kim-ep3.mp4","agent-kim-ep4.mp4","agent-kim-ep5.mp4"]},
+{title:"OUTER BANKS",type:"series",img:"images/outer banks.jpg",year:2025,genre:"Adventure",interpreter:"Junior",rating:9.3,episodes:["outer-banks-ep1.mp4","outer-banks-ep2.mp4","outer-banks-ep3.mp4","outer-banks-ep4.mp4","outer-banks-ep5.mp4"]}
 ];
 
-let series=[];
-
-/* LOAD */
-function load(){
-document.getElementById("homeList").innerHTML=[...movies].map(card).join("");
-document.getElementById("moviesList").innerHTML=movies.map(card).join("");
-document.getElementById("seriesList").innerHTML=series.map(card).join("");
+for(let i=3;i<=20;i++){
+movies.push({title:"SERIES "+String(i).padStart(2,"0"),type:"series",img:"https://placehold.co/400x600/25314a/ffffff?text=SERIES+"+i,year:2024,genre:"Drama",interpreter:"Rocky",rating:8.5,episodes:["series"+i+"-ep1.mp4","series"+i+"-ep2.mp4","series"+i+"-ep3.mp4"]});
 }
 
-/* CARD */
-function card(m){
-return `<div class="card" onclick="openMovie('${m.title}','${m.file}')">
-<img src="${m.img}">
-<p>${m.title}</p>
-</div>`;
+function setCategory(category,button){
+currentCategory=category;
+document.querySelectorAll(".tabs button").forEach(btn=>btn.classList.remove("active"));
+button.classList.add("active");
+document.getElementById("sectionTitle").innerText=category==="movie"?"Movies":category==="series"?"Series":"All Movies";
+applyFilters();
 }
 
-/* OPEN */
-function openMovie(t,f){
-document.getElementById("player").src=f;
-document.getElementById("title").innerText=t;
-show('watch');
+function displayMovies(list){
+const container=document.getElementById("moviesList");
+document.getElementById("movieCount").innerText=list.length+" Results";
+if(!list.length){container.innerHTML='<div class="empty"><i class="fa-solid fa-film"></i><br><br>No Movies or Series Found</div>';return}
+container.innerHTML=list.map(movie=>{
+const index=movies.indexOf(movie);
+return `<div class="card">
+<div class="poster" onclick="openContent(${index})"><img src="${movie.img}" alt="${movie.title}" loading="lazy"><div class="typeBadge">${movie.type.toUpperCase()}</div></div>
+<div class="cardInfo"><div class="movieTitle">${movie.title}</div>
+<div class="movieMeta"><span>${movie.year} • ${movie.genre}</span><span>⭐ ${movie.rating}</span></div>
+<div class="interpreter"><i class="fa-solid fa-microphone"></i> Umusobanuzi: <strong>${movie.interpreter}</strong></div>
+<div class="cardButtons">
+<button class="watchBtn" onclick="openContent(${index})"><i class="fa-solid fa-play"></i> Watch Now</button>
+<a class="downloadBtn" href="${movie.file||'#'}" ${movie.file?'download':''}><i class="fa-solid fa-download"></i> Download</a>
+</div></div></div>`;
+}).join("");
 }
 
-/* SHOW */
-function show(id){
-['home','movies','series','watch'].forEach(x=>{
-document.getElementById(x).style.display='none';
-});
-document.getElementById(id).style.display='block';
+function displayFeatured(){
+  const row=document.getElementById("featuredRow");
+  const featured=movies.slice(0,10);
+  row.innerHTML=featured.map(movie=>{
+    const index=movies.indexOf(movie);
+    return `<div class="featuredCard" onclick="openContent(${index})">
+      <div class="featuredPoster"><img src="${movie.img}" alt="${movie.title}" loading="lazy"><div class="featuredPlay"><i class="fa-solid fa-circle-play"></i></div></div>
+      <div class="featuredInfo"><div class="featuredName">${movie.title}</div><div class="featuredMeta">⭐ ${movie.rating} • ${movie.year}</div></div>
+    </div>`;
+  }).join("");
 }
 
-/* FILTER */
-function filterGenre(g){
-let f=movies.filter(m=>m.genre==g || g=="");
-document.getElementById("moviesList").innerHTML=f.map(card).join("");
-show('movies');
+function applyFilters(){
+const year=document.getElementById("yearFilter").value;
+const genre=document.getElementById("genreFilter").value;
+const interpreter=document.getElementById("interpreterFilter").value;
+const search=document.getElementById("searchInput").value.toLowerCase().trim();
+const sort=document.getElementById("sortFilter").value;
+let filtered=movies.filter(movie=>
+(currentCategory==="all"||movie.type===currentCategory)&&
+(!year||movie.year==year)&&(!genre||movie.genre===genre)&&
+(!interpreter||movie.interpreter===interpreter)&&
+movie.title.toLowerCase().includes(search)
+);
+if(sort==="newest")filtered.sort((a,b)=>b.year-a.year);
+if(sort==="oldest")filtered.sort((a,b)=>a.year-b.year);
+if(sort==="az")filtered.sort((a,b)=>a.title.localeCompare(b.title));
+if(sort==="rating")filtered.sort((a,b)=>b.rating-a.rating);
+displayMovies(filtered);
 }
 
-function filterInterp(i){
-let f=movies.filter(m=>m.interp==i || i=="");
-document.getElementById("moviesList").innerHTML=f.map(card).join("");
-show('movies');
+function resetFilters(){
+["yearFilter","genreFilter","interpreterFilter"].forEach(id=>document.getElementById(id).value="");
+document.getElementById("searchInput").value="";
+document.getElementById("sortFilter").value="newest";
+applyFilters();
 }
 
-load();
+function openContent(index){
+const item=movies[index];
+item.type==="series"?openSeries(index):openMovie(index);
+}
 
+function openMovie(index){
+const movie=movies[index];
+hideHome();
+document.getElementById("watchPage").style.display="block";
+document.getElementById("watchTitle").innerText=movie.title;
+document.getElementById("watchDetails").innerText=`${movie.year} • ${movie.genre} • ⭐ ${movie.rating}`;
+document.getElementById("watchInterpreter").innerHTML=`🎤 Umusobanuzi: <strong>${movie.interpreter}</strong>`;
+const player=document.getElementById("player");
+player.src=movie.file;
+player.load();
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function openSeries(index){
+const series=movies[index];
+hideHome();
+document.getElementById("episodePage").style.display="block";
+document.getElementById("seriesTitle").innerText=series.title;
+document.getElementById("seriesDetails").innerHTML=`${series.year} • ${series.genre} • 🎤 ${series.interpreter} • ⭐ ${series.rating}`;
+document.getElementById("episodeList").innerHTML=series.episodes.map((episode,i)=>`
+<div class="episodeCard"><h3>Episode ${i+1}</h3><br>
+<button onclick="playEpisode('${escapeJS(series.title)}','${escapeJS(episode)}','${escapeJS(series.interpreter)}')"><i class="fa-solid fa-play"></i> Watch Episode ${i+1}</button>
+<br><br><a class="downloadBtn" href="${episode}" download><i class="fa-solid fa-download"></i> Download Episode</a>
+</div>`).join("");
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function escapeJS(value){return String(value).replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
+
+function playEpisode(title,file,interpreter){
+document.getElementById("episodePage").style.display="none";
+document.getElementById("watchPage").style.display="block";
+document.getElementById("watchTitle").innerText=title;
+document.getElementById("watchDetails").innerText="Series Episode";
+document.getElementById("watchInterpreter").innerHTML=`🎤 Umusobanuzi: <strong>${interpreter}</strong>`;
+const player=document.getElementById("player");
+player.src=file;player.load();
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function hideHome(){
+["hero","featuredMovies","filterBox","tabs","moviesSection"].forEach(id=>document.getElementById(id).style.display="none");
+}
+function backToMovies(){
+["hero","featuredMovies","filterBox","moviesSection"].forEach(id=>document.getElementById(id).style.display="block");
+document.getElementById("tabs").style.display="flex";
+document.getElementById("watchPage").style.display="none";
+document.getElementById("episodePage").style.display="none";
+const player=document.getElementById("player");player.pause();player.removeAttribute("src");player.load();
+window.scrollTo({top:0,behavior:"smooth"});
+}
+function goHome(){backToMovies()}
+displayFeatured();
+applyFilters();
+
+function showMobileMoney(){
+    const number=document.getElementById("momoNumber");
+    number.style.display = number.style.display==="none" ? "block" : "none";
+}
 </script>
-
 </body>
 </html>
