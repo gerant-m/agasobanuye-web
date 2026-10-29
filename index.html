@@ -3,890 +3,373 @@
 <html lang="rw">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080808">
 <title>KEGAFILMS.NET | Movies & Series</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root {
-  --red: #e50914;
-  --bg: #080808;
-  --card: #171717;
-  --muted: #aaa;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: white;
-  font-family: Inter, Arial, sans-serif;
-  overflow-x: hidden;
-}
-button, input, select { font: inherit; }
-button { cursor: pointer; }
-a { text-decoration: none; color: inherit; }
-
-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  min-height: 70px;
-  padding: 12px 5%;
-  background: rgba(12,12,12,.96);
-  border-bottom: 1px solid #252525;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-}
-.logo { font-size: 23px; font-weight: 900; white-space: nowrap; }
-.logo span, .red { color: var(--red); }
-.header-right, .auth-buttons, .user-account {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-.user-account[hidden], .auth-buttons[hidden] { display: none; }
-.user-account span {
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 12px;
-}
-.search { width: min(260px, 27vw); }
-input, select {
-  background: #171717;
-  color: white;
-  border: 1px solid #393939;
-  border-radius: 7px;
-  padding: 12px;
-  outline: none;
-}
-.search input { width: 100%; }
-input:focus, select:focus { border-color: var(--red); }
-.small-btn {
-  border: 1px solid #393939;
-  padding: 10px 13px;
-  border-radius: 7px;
-  color: white;
-  background: #191919;
-  font-weight: 800;
-}
-.red-btn { background: var(--red); border-color: var(--red); }
-
-.hero {
-  min-height: 590px;
-  padding: 100px 5% 60px;
-  display: flex;
-  align-items: center;
-  background:
-    linear-gradient(90deg, #050505 0%, rgba(5,5,5,.85) 40%, rgba(5,5,5,.2)),
-    linear-gradient(0deg, var(--bg), transparent 40%),
-    url("agent kim s01.jpg") center/cover no-repeat;
-}
-.hero-content { max-width: 650px; }
-.eyebrow {
-  color: var(--red);
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-weight: 800;
-  margin-bottom: 15px;
-}
-.hero h1 { font-size: clamp(42px, 7vw, 76px); line-height: 1.05; }
-.hero p { color: #ccc; line-height: 1.8; margin-top: 18px; }
-.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; }
-.btn {
-  padding: 13px 20px;
-  border: 0;
-  border-radius: 6px;
-  font-weight: 800;
-}
-.primary { background: var(--red); color: white; }
-.secondary { background: white; color: black; }
-.dark-btn { background: #303030; color: white; }
-.support {
-  max-width: 440px;
-  padding: 17px;
-  margin-top: 28px;
-  border: 1px solid #383838;
-  border-radius: 10px;
-  background: rgba(0,0,0,.6);
-}
-.support p { margin-top: 5px; font-size: 13px; }
-
-section.content { padding: 45px 5%; }
-.section-heading { font-size: 25px; margin-bottom: 22px; }
-.trending {
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  margin-bottom: 35px;
-}
-.trend {
-  position: relative;
-  flex: 0 0 220px;
-  height: 125px;
-  overflow: hidden;
-  border-radius: 9px;
-  background: #222;
-  cursor: pointer;
-}
-.trend img { width: 100%; height: 100%; object-fit: cover; }
-.trend strong {
-  position: absolute;
-  inset: auto 0 0;
-  padding: 15px 10px 10px;
-  background: linear-gradient(transparent, #000);
-}
-.filters {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.filters select { width: 100%; }
-.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
-.tab {
-  padding: 9px 17px;
-  border-radius: 25px;
-  border: 1px solid #393939;
-  color: #ddd;
-  background: #171717;
-}
-.tab.active { background: var(--red); border-color: var(--red); }
-
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 17px;
-}
-.movie-card {
-  min-width: 0;
-  background: var(--card);
-  border: 1px solid #242424;
-  border-radius: 9px;
-  overflow: hidden;
-  transition: .2s;
-}
-.movie-card:hover { transform: translateY(-4px); }
-.poster {
-  height: 280px;
-  position: relative;
-  background: #222;
-}
-.poster img { width: 100%; height: 100%; object-fit: cover; }
-.badge {
-  position: absolute;
-  left: 8px;
-  top: 8px;
-  background: var(--red);
-  padding: 5px 7px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 900;
-}
-.movie-info { padding: 12px; }
-.movie-title { font-size: 14px; font-weight: 800; }
-.meta { color: #aaa; font-size: 11px; margin-top: 8px; line-height: 1.7; }
-.card-buttons { display: grid; gap: 7px; margin-top: 13px; }
-.card-buttons button {
-  padding: 9px 5px;
-  border: 0;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: 800;
-}
-.watch { background: var(--red); color: white; }
-.download { background: #303030; color: white; }
-.empty { display: none; text-align: center; padding: 50px; color: #aaa; }
-
-.page { display: none; min-height: 80vh; padding: 35px 5%; }
-.page.active { display: block; }
-.player { max-width: 1100px; margin: auto; }
-.player video { width: 100%; max-height: 650px; background: black; }
-.player h1 { margin: 20px 0 10px; }
-.back { margin-bottom: 20px; }
-.episodes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 25px; }
-.episode { background: #191919; border: 1px solid #333; padding: 15px; border-radius: 8px; }
-.episode button { margin-top: 10px; padding: 8px; border: 0; border-radius: 5px; color: white; background: var(--red); }
-
-footer {
-  text-align: center;
-  padding: 35px 5%;
-  border-top: 1px solid #282828;
-  color: #aaa;
-  line-height: 2;
-}
-.whatsapp {
-  position: fixed;
-  z-index: 90;
-  right: 18px;
-  bottom: 18px;
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  background: #25d366;
-  color: white;
-  border-radius: 50%;
-  font-size: 26px;
-}
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 500;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-  background: rgba(0,0,0,.85);
-}
-.overlay.open { display: flex; }
-.auth-card {
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  max-height: 90vh;
-  overflow: auto;
-  padding: 28px;
-  border: 1px solid #333;
-  border-radius: 14px;
-  background: #171717;
-}
-.close {
-  position: absolute;
-  right: 12px;
-  top: 10px;
-  border: 0;
-  border-radius: 50%;
-  padding: 7px 12px;
-  background: #333;
-  color: white;
-}
-.auth-card h2 { margin-bottom: 15px; }
-.auth-card label { display: block; margin: 14px 0 6px; font-size: 13px; }
-.auth-card input { width: 100%; }
-.auth-card form { display: none; }
-.auth-card form.active { display: block; }
-.submit {
-  width: 100%;
-  padding: 13px;
-  margin-top: 18px;
-  border: 0;
-  border-radius: 6px;
-  background: var(--red);
-  color: white;
-  font-weight: 900;
-}
-.auth-link {
-  margin-top: 14px;
-  border: 0;
-  background: transparent;
-  color: #ff555d;
-}
-.message {
-  display: none;
-  margin-top: 15px;
-  padding: 12px;
-  border-radius: 7px;
-  background: #292929;
-  font-size: 13px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
-.message.show { display: block; }
-
-@media(max-width: 1050px) {
-  .movie-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .episodes { grid-template-columns: repeat(3, 1fr); }
-}
-@media(max-width: 780px) {
-  header { padding: 12px 3%; }
-  .movie-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .poster { height: 240px; }
-  .filters { grid-template-columns: repeat(2, 1fr); }
-  .episodes { grid-template-columns: repeat(2, 1fr); }
-  .hero { min-height: 530px; }
-}
-@media(max-width: 540px) {
-  header { flex-wrap: wrap; }
-  .logo { font-size: 18px; }
-  .header-right { flex: 1; justify-content: flex-end; }
-  .search { width: 110px; }
-  .search input { padding: 9px; font-size: 11px; }
-  .small-btn { padding: 8px; font-size: 10px; }
-  .user-account span { display: none; }
-  .hero { min-height: 540px; padding: 70px 5% 40px; }
-  section.content { padding: 35px 4%; }
-  .movie-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
-  .poster { height: 220px; }
-  .movie-info { padding: 9px; }
-  .movie-title { font-size: 12px; }
-  .card-buttons button { font-size: 11px; }
-  .episodes { grid-template-columns: 1fr; }
-}
+:root{--red:#e50914;--bg:#080808;--card:#171717;--muted:#aaa}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#fff;font-family:Inter,Arial,sans-serif;overflow-x:hidden}
+button,input,select{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
+header{position:sticky;top:0;z-index:100;min-height:70px;padding:12px 5%;background:rgba(12,12,12,.97);border-bottom:1px solid #252525;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.logo{font-size:23px;font-weight:900;white-space:nowrap}.red,.logo span{color:var(--red)}
+.header-right,.auth-buttons,.user-account{display:flex;align-items:center;gap:9px}
+.user-account[hidden],.auth-buttons[hidden]{display:none}
+.user-account span{max-width:150px;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+.search{width:min(260px,27vw)}input,select{background:#171717;color:white;border:1px solid #393939;border-radius:7px;padding:12px;outline:none}
+.search input{width:100%}input:focus,select:focus{border-color:var(--red)}
+.small-btn{border:1px solid #393939;padding:10px 13px;border-radius:7px;color:white;background:#191919;font-weight:800}
+.red-btn{background:var(--red);border-color:var(--red)}
+.hero{min-height:590px;padding:100px 5% 60px;display:flex;align-items:center;background:linear-gradient(90deg,#050505 0%,rgba(5,5,5,.85) 40%,rgba(5,5,5,.2)),linear-gradient(0deg,var(--bg),transparent 40%),url("agent kim s01.jpg") center/cover no-repeat}
+.hero-content{max-width:650px}.eyebrow{color:var(--red);text-transform:uppercase;letter-spacing:3px;font-weight:800;margin-bottom:15px}
+.hero h1{font-size:clamp(42px,7vw,76px);line-height:1.05}.hero p{color:#ccc;line-height:1.8;margin-top:18px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}
+.btn{padding:13px 20px;border:0;border-radius:6px;font-weight:800}
+.primary{background:var(--red);color:white}.secondary{background:white;color:black}.dark-btn{background:#303030;color:white}
+.support{max-width:440px;padding:17px;margin-top:28px;border:1px solid #383838;border-radius:10px;background:rgba(0,0,0,.6)}
+.support p{margin-top:5px;font-size:13px}
+section.content{padding:45px 5%}.section-heading{font-size:25px;margin-bottom:22px}
+.trending{display:flex;gap:14px;overflow-x:auto;margin-bottom:35px}
+.trend{position:relative;flex:0 0 220px;height:125px;overflow:hidden;border-radius:9px;background:#222;cursor:pointer}
+.trend img{width:100%;height:100%;object-fit:cover}
+.trend strong{position:absolute;inset:auto 0 0;padding:15px 10px 10px;background:linear-gradient(transparent,#000)}
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.filters select{width:100%}.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.tab{padding:9px 17px;border-radius:25px;border:1px solid #393939;color:#ddd;background:#171717}
+.tab.active{background:var(--red);border-color:var(--red)}
+.movie-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:17px}
+.movie-card{min-width:0;background:var(--card);border:1px solid #242424;border-radius:9px;overflow:hidden;transition:.2s}
+.movie-card:hover{transform:translateY(-4px)}
+.poster{height:280px;position:relative;background:#222}.poster img{width:100%;height:100%;object-fit:cover}
+.badge{position:absolute;left:8px;top:8px;background:var(--red);padding:5px 7px;border-radius:4px;font-size:10px;font-weight:900}
+.movie-info{padding:12px}.movie-title{font-size:14px;font-weight:800}
+.meta{color:#aaa;font-size:11px;margin-top:8px;line-height:1.7}
+.card-buttons{display:grid;gap:7px;margin-top:13px}
+.card-buttons button{padding:9px 5px;border:0;border-radius:5px;font-size:12px;font-weight:800}
+.watch{background:var(--red);color:white}.download{background:#303030;color:white}
+.empty{display:none;text-align:center;padding:50px;color:#aaa}
+.page{display:none;min-height:80vh;padding:35px 5%}.page.active{display:block}
+.player{max-width:1100px;margin:auto}.player video{width:100%;max-height:650px;background:black}
+.player h1{margin:20px 0 10px}.back{margin-bottom:20px}
+.episodes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:25px}
+.episode{background:#191919;border:1px solid #333;padding:15px;border-radius:8px}
+.episode button{margin:10px 5px 0 0;padding:8px;border:0;border-radius:5px;color:white;background:var(--red)}
+footer{text-align:center;padding:35px 5%;border-top:1px solid #282828;color:#aaa;line-height:2}
+.whatsapp{position:fixed;z-index:90;right:18px;bottom:18px;width:52px;height:52px;display:grid;place-items:center;background:#25d366;color:white;border-radius:50%;font-size:26px}
+.overlay{position:fixed;inset:0;z-index:500;display:none;justify-content:center;align-items:center;padding:15px;background:rgba(0,0,0,.85)}
+.overlay.open{display:flex}.auth-card{position:relative;width:100%;max-width:420px;max-height:90vh;overflow:auto;padding:28px;border:1px solid #333;border-radius:14px;background:#171717}
+.close{position:absolute;right:12px;top:10px;border:0;border-radius:50%;padding:7px 12px;background:#333;color:white}
+.auth-card h2{margin-bottom:15px}.auth-card label{display:block;margin:14px 0 6px;font-size:13px}
+.auth-card input{width:100%}.auth-card form{display:none}.auth-card form.active{display:block}
+.submit{width:100%;padding:13px;margin-top:18px;border:0;border-radius:6px;background:var(--red);color:white;font-weight:900}
+.auth-link{margin-top:14px;border:0;background:transparent;color:#ff555d}
+.message{display:none;margin-top:15px;padding:12px;border-radius:7px;background:#292929;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.message.show{display:block}
+@media(max-width:1050px){.movie-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.episodes{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:780px){header{padding:12px 3%}.movie-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.poster{height:240px}.filters{grid-template-columns:repeat(2,1fr)}.episodes{grid-template-columns:repeat(2,1fr)}.hero{min-height:530px}}
+@media(max-width:540px){header{flex-wrap:wrap}.logo{font-size:18px}.header-right{flex:1;justify-content:flex-end}.search{width:110px}.search input{padding:9px;font-size:11px}.small-btn{padding:8px;font-size:10px}.user-account span{display:none}.hero{min-height:540px;padding:70px 5% 40px}section.content{padding:35px 4%}.movie-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.poster{height:220px}.movie-info{padding:9px}.movie-title{font-size:12px}.card-buttons button{font-size:11px}.episodes{grid-template-columns:1fr}}
 </style>
 </head>
-
 <body>
 <header>
-  <a href="#" class="logo" onclick="goHome();return false">KEGA<span>FILMS</span>.NET</a>
-  <div class="header-right">
-    <div class="search">
-      <input id="searchInput" type="search" placeholder="Search movies..." oninput="applyFilters()">
-    </div>
-    <div class="auth-buttons" id="authButtons">
-      <button class="small-btn" onclick="openAuth('login')">Login</button>
-      <button class="small-btn red-btn" onclick="openAuth('signup')">Sign Up</button>
-    </div>
-    <div class="user-account" id="userAccount" hidden>
-      <span id="userEmail"></span>
-      <button class="small-btn" onclick="logoutUser()">Logout</button>
-    </div>
-  </div>
+<a href="#" class="logo" onclick="goHome();return false">KEGA<span>FILMS</span>.NET</a>
+<div class="header-right">
+<div class="search"><input id="searchInput" type="search" placeholder="Search movies..." oninput="applyFilters()"></div>
+<div class="auth-buttons" id="authButtons">
+<button class="small-btn" onclick="openAuth('login')">Login</button>
+<button class="small-btn red-btn" onclick="openAuth('signup')">Sign Up</button>
+</div>
+<div class="user-account" id="userAccount" hidden><span id="userEmail"></span><button class="small-btn" onclick="logoutUser()">Logout</button></div>
+</div>
 </header>
 
 <main id="homePage">
-  <section class="hero">
-    <div class="hero-content">
-      <div class="eyebrow">Welcome to KEGAFILMS</div>
-      <h1>Watch <span class="red">agasobanuye</span></h1>
-      <p>Reba movies na series zasobanuwe mu Kinyarwanda. Hitamo film ukunda, uyirebe cyangwa uyikuremo.</p>
-      <div class="actions">
-        <button class="btn primary" onclick="scrollToMovies()"><i class="fa-solid fa-play"></i> Browse Movies</button>
-        <button class="btn secondary" onclick="scrollToTrending()"><i class="fa-solid fa-fire"></i> Trending</button>
-      </div>
-      <div class="support">
-        <strong><i class="fa-solid fa-heart red"></i> Support KEGAFILMS</strong>
-        <p>Ushobora kudufasha gukomeza kongera movies nshya.</p>
-        <button class="btn dark-btn" style="margin-top:12px" onclick="showMobileMoney()">Mobile Money</button>
-      </div>
-    </div>
-  </section>
-
-  <section class="content" id="trendingSection">
-    <h2 class="section-heading"><span class="red">🔥</span> Trending Movies</h2>
-    <div class="trending" id="trendingList"></div>
-  </section>
-
-  <section class="content" id="moviesSection">
-    <h2 class="section-heading">WATCH <span class="red">MOVIES</span></h2>
-    <div class="filters">
-      <select id="yearFilter" onchange="applyFilters()"><option value="">All Years</option></select>
-      <select id="genreFilter" onchange="applyFilters()"><option value="">All Genres</option></select>
-      <select id="interpreterFilter" onchange="applyFilters()"><option value="">All Interpreters</option></select>
-      <select id="sortFilter" onchange="applyFilters()">
-        <option value="newest">Newest first</option>
-        <option value="oldest">Oldest first</option>
-        <option value="az">Title A-Z</option>
-      </select>
-    </div>
-    <div class="tabs">
-      <button class="tab active" id="tabAll" onclick="setCategory('all',this)">All</button>
-      <button class="tab" onclick="setCategory('movie',this)">Movies</button>
-      <button class="tab" onclick="setCategory('series',this)">Series</button>
-      <button class="tab" onclick="resetFilters()">Reset</button>
-    </div>
-    <div class="movie-grid" id="movieGrid"></div>
-    <div class="empty" id="emptyMessage">Nta film ibonetse. Gerageza gushaka izindi.</div>
-  </section>
+<section class="hero"><div class="hero-content">
+<div class="eyebrow">Welcome to KEGAFILMS</div>
+<h1>Watch <span class="red">agasobanuye</span></h1>
+<p>Reba movies na series zasobanuwe mu Kinyarwanda. Hitamo film ukunda, uyirebe cyangwa uyikuremo.</p>
+<div class="actions"><button class="btn primary" onclick="scrollToMovies()"><i class="fa-solid fa-play"></i> Browse Movies</button><button class="btn secondary" onclick="scrollToTrending()"><i class="fa-solid fa-fire"></i> Trending</button></div>
+<div class="support"><strong><i class="fa-solid fa-heart red"></i> Support KEGAFILMS</strong><p>Ushobora kudufasha gukomeza kongera movies nshya.</p><button class="btn dark-btn" style="margin-top:12px" onclick="showMobileMoney()">Mobile Money</button></div>
+</div></section>
+<section class="content" id="trendingSection"><h2 class="section-heading"><span class="red">🔥</span> Trending Movies</h2><div class="trending" id="trendingList"></div></section>
+<section class="content" id="moviesSection">
+<h2 class="section-heading">WATCH <span class="red">MOVIES</span></h2>
+<div class="filters">
+<select id="yearFilter" onchange="applyFilters()"><option value="">All Years</option></select>
+<select id="genreFilter" onchange="applyFilters()"><option value="">All Genres</option></select>
+<select id="interpreterFilter" onchange="applyFilters()"><option value="">All Interpreters</option></select>
+<select id="sortFilter" onchange="applyFilters()"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="az">Title A-Z</option></select>
+</div>
+<div class="tabs">
+<button class="tab active" id="tabAll" onclick="setCategory('all',this)">All</button>
+<button class="tab" onclick="setCategory('movie',this)">Movies</button>
+<button class="tab" onclick="setCategory('series',this)">Series</button>
+<button class="tab" onclick="resetFilters()">Reset</button>
+</div>
+<div class="movie-grid" id="movieGrid"></div><div class="empty" id="emptyMessage">Nta film ibonetse. Gerageza gushaka izindi.</div>
+</section>
 </main>
 
-<section class="page" id="watchPage">
-  <div class="player">
-    <button class="btn dark-btn back" onclick="backToMovies()">← Back</button>
-    <video id="mainVideo" controls playsinline preload="metadata"></video>
-    <h1 id="watchTitle"></h1>
-    <p id="watchMeta" class="meta"></p>
-    <button class="btn primary" id="watchDownloadButton">Download</button>
-  </div>
-</section>
-
-<section class="page" id="seriesPage">
-  <div class="player">
-    <button class="btn dark-btn back" onclick="backToMovies()">← Back</button>
-    <h1 id="seriesTitle"></h1>
-    <p id="seriesMeta" class="meta"></p>
-    <div class="episodes" id="episodeList"></div>
-  </div>
-</section>
-
-<section class="page" id="episodePage">
-  <div class="player">
-    <button class="btn dark-btn back" onclick="backToSeries()">← Back to Episodes</button>
-    <video id="episodeVideo" controls playsinline preload="metadata"></video>
-    <h1 id="episodeTitle"></h1>
-    <button class="btn primary" id="episodeDownloadButton">Download Episode</button>
-  </div>
-</section>
+<section class="page" id="watchPage"><div class="player">
+<button class="btn dark-btn back" onclick="backToMovies()">← Back</button>
+<video id="mainVideo" controls playsinline preload="metadata"></video><h1 id="watchTitle"></h1><p id="watchMeta" class="meta"></p>
+<button class="btn primary" id="watchDownloadButton">Download</button>
+</div></section>
+<section class="page" id="seriesPage"><div class="player">
+<button class="btn dark-btn back" onclick="backToMovies()">← Back</button><h1 id="seriesTitle"></h1><p id="seriesMeta" class="meta"></p><div class="episodes" id="episodeList"></div>
+</div></section>
+<section class="page" id="episodePage"><div class="player">
+<button class="btn dark-btn back" onclick="backToSeries()">← Back to Episodes</button>
+<video id="episodeVideo" controls playsinline preload="metadata"></video><h1 id="episodeTitle"></h1>
+<button class="btn primary" id="episodeDownloadButton">Download Episode</button>
+</div></section>
 
 <footer>
-  <h2>KEGA<span class="red">FILMS</span>.NET</h2>
-  <p>Movies & Series in Kinyarwanda</p>
-  <p>
-    <a href="https://www.instagram.com/kega_update/" target="_blank" rel="noopener">Instagram</a> |
-    <a href="https://www.youtube.com/channel/UCtpthNrp5wuGa2PbFQPTGKg" target="_blank" rel="noopener">YouTube</a>
-  </p>
-  <p>© 2026 KEGAFILMS.NET. All Rights Reserved.</p>
+<h2>KEGA<span class="red">FILMS</span>.NET</h2><p>Movies & Series in Kinyarwanda</p>
+<p><a href="https://www.instagram.com/kega_update/" target="_blank" rel="noopener">Instagram</a> | <a href="https://www.youtube.com/channel/UCtpthNrp5wuGa2PbFQPTGKg" target="_blank" rel="noopener">YouTube</a></p>
+<p>© 2026 KEGAFILMS.NET. All Rights Reserved.</p>
 </footer>
+<a class="whatsapp" href="https://wa.me/250794186614" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
-<a class="whatsapp" href="https://wa.me/250794186614" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <i class="fa-brands fa-whatsapp"></i>
-</a>
-
-<div class="overlay" id="authOverlay">
-  <div class="auth-card">
-    <button class="close" onclick="closeAuth()" aria-label="Close">✕</button>
-    <h2>KEGA<span class="red">FILMS</span></h2>
-    <p style="color:#aaa;font-size:13px">Kora konti yawe kuri KEGAFILMS.</p>
-
-    <form id="signupForm" class="active">
-      <h3>Create Account</h3>
-      <label for="signupEmail">Email</label>
-      <input id="signupEmail" type="email" autocomplete="email" required placeholder="you@example.com">
-      <label for="signupPassword">Password (nibura inyuguti 8)</label>
-      <input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required>
-      <button class="submit" type="submit">Create Account</button>
-      <button class="auth-link" type="button" onclick="showAuthForm('login')">Usanzwe ufite konti? Login</button>
-    </form>
-
-    <form id="loginForm">
-      <h3>Login</h3>
-      <label for="loginEmail">Email</label>
-      <input id="loginEmail" type="email" autocomplete="email" required>
-      <label for="loginPassword">Password</label>
-      <input id="loginPassword" type="password" autocomplete="current-password" required>
-      <button class="submit" type="submit">Login</button>
-      <button class="auth-link" type="button" onclick="showAuthForm('forgotForm')">Wibagiwe password?</button><br>
-      <button class="auth-link" type="button" onclick="showAuthForm('signup')">Nta konti ufite? Sign Up</button>
-    </form>
-
-    <form id="forgotForm">
-      <h3>Forgot Password</h3>
-      <label for="forgotEmail">Email</label>
-      <input id="forgotEmail" type="email" required>
-      <button class="submit" type="submit">Send Reset Email</button>
-      <button class="auth-link" type="button" onclick="showAuthForm('login')">Subira kuri Login</button>
-    </form>
-
-    <form id="resetForm">
-      <h3>Set New Password</h3>
-      <label for="newPassword">Password nshya</label>
-      <input id="newPassword" type="password" minlength="8" required>
-      <label for="confirmPassword">Ongera wandike password</label>
-      <input id="confirmPassword" type="password" minlength="8" required>
-      <button class="submit" type="submit">Change Password</button>
-    </form>
-    <div class="message" id="authMessage" role="status"></div>
-  </div>
-</div>
+<div class="overlay" id="authOverlay"><div class="auth-card">
+<button class="close" onclick="closeAuth()" aria-label="Close">✕</button>
+<h2>KEGA<span class="red">FILMS</span></h2><p style="color:#aaa;font-size:13px">Kora konti yawe kuri KEGAFILMS.</p>
+<form id="signupForm" class="active">
+<h3>Create Account</h3><label for="signupEmail">Email</label><input id="signupEmail" type="email" autocomplete="email" required placeholder="you@example.com">
+<label for="signupPassword">Password (nibura inyuguti 8)</label><input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required>
+<button class="submit" type="submit">Create Account</button><button class="auth-link" type="button" onclick="showAuthForm('login')">Usanzwe ufite konti? Login</button>
+</form>
+<form id="loginForm"><h3>Login</h3><label for="loginEmail">Email</label><input id="loginEmail" type="email" autocomplete="email" required>
+<label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required>
+<button class="submit" type="submit">Login</button><button class="auth-link" type="button" onclick="showAuthForm('forgotForm')">Wibagiwe password?</button><br><button class="auth-link" type="button" onclick="showAuthForm('signup')">Nta konti ufite? Sign Up</button>
+</form>
+<form id="forgotForm"><h3>Forgot Password</h3><label for="forgotEmail">Email</label><input id="forgotEmail" type="email" required>
+<button class="submit" type="submit">Send Reset Email</button><button class="auth-link" type="button" onclick="showAuthForm('login')">Subira kuri Login</button></form>
+<form id="resetForm"><h3>Set New Password</h3><label for="newPassword">Password nshya</label><input id="newPassword" type="password" minlength="8" required>
+<label for="confirmPassword">Ongera wandike password</label><input id="confirmPassword" type="password" minlength="8" required><button class="submit" type="submit">Change Password</button></form>
+<div class="message" id="authMessage" role="status"></div>
+</div></div>
 
 <script>
-/* Movie filenames must match the files you upload to your website. */
-const movies = [
-  {title:"ALPHA A",type:"movie",file:"ALPHA_A.mp4",img:"ALPHA.jpg",year:2026,genre:"Action",interpreter:"Rocky"},
-  {title:"ALPHA B",type:"movie",file:"ALPHA_B.mp4",img:"ALPHA.jpg",year:2026,genre:"Action",interpreter:"Perfect"},
-  {title:"DC DEVADAS CHANDRA",type:"movie",file:"DC_DEVADAS_CHANDRA.mp4",img:"DC_DEVADAS_CHANDRA.jpg",year:2026,genre:"Action",interpreter:"Perfect"},
-  {title:"JUST PLAY DEAD",type:"movie",file:"just play dead.mp4",img:"just_play_dead.jpg",year:2026,genre:"Horror",interpreter:"Perfect"},
-  {title:"THE RUNNER",type:"movie",file:"The runner.mp4",img:"The runner.jpg",year:2023,genre:"Comedy",interpreter:"Siniya"},
-  {title:"AGENT KIM S01",type:"series",img:"agent kim s01.jpg",year:2026,genre:"Series",interpreter:"Rocky",episodes:["agent-kim-ep1.mp4","agent-kim-ep4.mp4","agent-kim-ep5.mp4","agent-kim-ep6.mp4","agent-kim-ep7.mp4","agent-kim-ep8.mp4","agent-kim-ep9.mp4","agent-kim-ep10 FINAL.mp4"]},
-  {title:"OUTER BANKS",type:"series",img:"outer banks.jpg",year:2026,genre:"Series",interpreter:"Rocky",episodes:["outer-banks-ep1.mp4","outer-banks-ep2.mp4","outer-banks-ep3.mp4","outer-banks-ep4.mp4","outer-banks-ep5.mp4"]}
+const movies=[
+{title:"ALPHA A",type:"movie",file:"ALPHA_A.mp4",img:"ALPHA.jpg",year:2026,genre:"Action",interpreter:"Rocky"},
+{title:"ALPHA B",type:"movie",file:"ALPHA_B.mp4",img:"ALPHA.jpg",year:2026,genre:"Action",interpreter:"Perfect"},
+{title:"DC DEVADAS CHANDRA",type:"movie",file:"DC_DEVADAS_CHANDRA.mp4",img:"DC_DEVADAS_CHANDRA.jpg",year:2026,genre:"Action",interpreter:"Perfect"},
+{title:"JUST PLAY DEAD",type:"movie",file:"just play dead.mp4",img:"just_play_dead.jpg",year:2026,genre:"Horror",interpreter:"Perfect"},
+{title:"THE RUNNER",type:"movie",file:"The runner.mp4",img:"The runner.jpg",year:2023,genre:"Comedy",interpreter:"Siniya"},
+{title:"AGENT KIM S01",type:"series",img:"agent kim s01.jpg",year:2026,genre:"Series",interpreter:"Rocky",episodes:["agent-kim-ep1.mp4","agent-kim-ep4.mp4","agent-kim-ep5.mp4","agent-kim-ep6.mp4","agent-kim-ep7.mp4","agent-kim-ep8.mp4","agent-kim-ep9.mp4","agent-kim-ep10 FINAL.mp4"]},
+{title:"OUTER BANKS",type:"series",img:"outer banks.jpg",year:2026,genre:"Series",interpreter:"Rocky",episodes:["outer-banks-ep1.mp4","outer-banks-ep2.mp4","outer-banks-ep3.mp4","outer-banks-ep4.mp4","outer-banks-ep5.mp4"]}
 ];
-
-let currentCategory = "all";
-let currentSeries = null;
-
-const movieGrid = document.getElementById("movieGrid");
-const emptyMessage = document.getElementById("emptyMessage");
-const searchInput = document.getElementById("searchInput");
-const yearFilter = document.getElementById("yearFilter");
-const genreFilter = document.getElementById("genreFilter");
-const interpreterFilter = document.getElementById("interpreterFilter");
-const sortFilter = document.getElementById("sortFilter");
-
-function filePath(file) {
-  return encodeURI(file);
+let currentCategory="all",currentSeries=null;
+const movieGrid=document.getElementById("movieGrid"),emptyMessage=document.getElementById("emptyMessage");
+const searchInput=document.getElementById("searchInput"),yearFilter=document.getElementById("yearFilter");
+const genreFilter=document.getElementById("genreFilter"),interpreterFilter=document.getElementById("interpreterFilter"),sortFilter=document.getElementById("sortFilter");
+function filePath(file){return encodeURI(file)}
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function displayMovies(list){
+ movieGrid.innerHTML="";emptyMessage.style.display=list.length?"none":"block";
+ list.forEach(movie=>{
+  const card=document.createElement("article");card.className="movie-card";
+  const action=movie.type==="series"?`<button class="watch" data-action="series" data-title="${escapeHTML(movie.title)}">Episodes</button>`:`<button class="watch" data-action="watch" data-title="${escapeHTML(movie.title)}">▶ Watch</button>`;
+  const download=movie.type==="movie"?`<button class="download" data-action="download" data-file="${escapeHTML(movie.file)}" data-title="${escapeHTML(movie.title)}">↓ Download</button>`:`<button class="download" data-action="series" data-title="${escapeHTML(movie.title)}">Episodes</button>`;
+  card.innerHTML=`<div class="poster"><img src="${filePath(movie.img)}" alt="${escapeHTML(movie.title)}" loading="lazy" onerror="this.style.display='none'"><span class="badge">${movie.type==="series"?"SERIES":"MOVIE"}</span></div><div class="movie-info"><div class="movie-title">${escapeHTML(movie.title)}</div><div class="meta">${movie.year} • ${escapeHTML(movie.genre)} • ${escapeHTML(movie.interpreter)}</div><div class="card-buttons">${action}${download}</div></div>`;
+  movieGrid.appendChild(card);
+ });
 }
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  })[char]);
+function displayTrending(){
+ const container=document.getElementById("trendingList");container.innerHTML="";
+ movies.forEach(movie=>{const card=document.createElement("div");card.className="trend";
+ card.innerHTML=`<img src="${filePath(movie.img||"")}" alt="${escapeHTML(movie.title)}" onerror="this.style.display='none'"><strong>${escapeHTML(movie.title)}</strong>`;
+ card.onclick=()=>movie.type==="series"?openSeriesByTitle(movie.title):openMovieByTitle(movie.title);container.appendChild(card)});
+}
+function createFilters(){
+ [...new Set(movies.map(m=>m.year))].sort((a,b)=>b-a).forEach(v=>yearFilter.add(new Option(v,v)));
+ [...new Set(movies.map(m=>m.genre))].sort().forEach(v=>genreFilter.add(new Option(v,v)));
+ [...new Set(movies.map(m=>m.interpreter))].sort().forEach(v=>interpreterFilter.add(new Option(v,v)));
+}
+function applyFilters(){
+ let result=[...movies],search=searchInput.value.trim().toLowerCase();
+ if(currentCategory!=="all")result=result.filter(m=>m.type===currentCategory);
+ if(search)result=result.filter(m=>m.title.toLowerCase().includes(search));
+ if(yearFilter.value)result=result.filter(m=>String(m.year)===yearFilter.value);
+ if(genreFilter.value)result=result.filter(m=>m.genre===genreFilter.value);
+ if(interpreterFilter.value)result=result.filter(m=>m.interpreter===interpreterFilter.value);
+ if(sortFilter.value==="oldest")result.sort((a,b)=>a.year-b.year);
+ else if(sortFilter.value==="az")result.sort((a,b)=>a.title.localeCompare(b.title));
+ else result.sort((a,b)=>b.year-a.year);
+ displayMovies(result);
+}
+function setCategory(category,button){currentCategory=category;document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));button.classList.add("active");applyFilters()}
+function resetFilters(){currentCategory="all";yearFilter.value="";genreFilter.value="";interpreterFilter.value="";sortFilter.value="newest";searchInput.value="";document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));document.getElementById("tabAll").classList.add("active");applyFilters()}
+function findMovie(title){return movies.find(m=>m.title===title)}
+function hideAllPages(){document.getElementById("homePage").style.display="none";document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))}
+function openMovieByTitle(title){const movie=findMovie(title);if(movie)openMovie(movie)}
+function openMovie(movie){
+ hideAllPages();document.getElementById("watchPage").classList.add("active");
+ const video=document.getElementById("mainVideo");video.pause();video.src=filePath(movie.file);video.load();
+ document.getElementById("watchTitle").textContent=movie.title;
+ document.getElementById("watchMeta").textContent=`${movie.year} • ${movie.genre} • ${movie.interpreter}`;
+ document.getElementById("watchDownloadButton").onclick=function(){downloadFile(movie.file,movie.title,this)};
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function openSeriesByTitle(title){
+ const series=findMovie(title);if(!series)return;currentSeries=series;hideAllPages();document.getElementById("seriesPage").classList.add("active");
+ document.getElementById("seriesTitle").textContent=series.title;document.getElementById("seriesMeta").textContent=`${series.year} • ${series.genre} • ${series.interpreter}`;
+ const list=document.getElementById("episodeList");list.innerHTML="";
+ (series.episodes||[]).forEach((episode,index)=>{const item=document.createElement("div");item.className="episode";
+ item.innerHTML=`<h3>Episode ${index+1}</h3><button data-episode="${index}">▶ Watch</button><button data-file="${escapeHTML(episode)}" data-title="${escapeHTML(series.title+" Episode "+(index+1))}">↓ Download</button>`;list.appendChild(item)});
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function playEpisode(index){
+ if(!currentSeries)return;const episode=currentSeries.episodes[index];hideAllPages();document.getElementById("episodePage").classList.add("active");
+ const video=document.getElementById("episodeVideo");video.pause();video.src=filePath(episode);video.load();
+ document.getElementById("episodeTitle").textContent=`${currentSeries.title} - Episode ${index+1}`;
+ document.getElementById("episodeDownloadButton").onclick=function(){downloadFile(episode,currentSeries.title+" Episode "+(index+1),this)};
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+async function downloadFile(file,title,button){
+ if(!button)return;const original=button.innerHTML;button.disabled=true;button.innerHTML="Please wait...";
+ try{const response=await fetch(filePath(file));if(!response.ok)throw new Error("Video ntiyabonetse");
+ const blob=await response.blob(),url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;
+ link.download=title.replace(/[^\w\s-]/g,"").replace(/\s+/g,"_")+".mp4";document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+ }catch(error){if(confirm("Download ntiyakunze. Ushaka gufungura video muri browser?"))window.open(filePath(file),"_blank","noopener")}
+ finally{button.disabled=false;button.innerHTML=original}
+}
+function backToMovies(){document.getElementById("mainVideo").pause();document.getElementById("episodeVideo").pause();document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById("homePage").style.display="block";document.getElementById("moviesSection").scrollIntoView({behavior:"smooth"})}
+function backToSeries(){document.getElementById("episodeVideo").pause();document.getElementById("episodePage").classList.remove("active");document.getElementById("seriesPage").classList.add("active")}
+function goHome(){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById("homePage").style.display="block";window.scrollTo({top:0,behavior:"smooth"})}
+function scrollToMovies(){document.getElementById("moviesSection").scrollIntoView({behavior:"smooth"})}
+function scrollToTrending(){document.getElementById("trendingSection").scrollIntoView({behavior:"smooth"})}
+function showMobileMoney(){alert("Support KEGAFILMS\nMTN MoMo: 0794186614\nMurakoze ku nkunga yanyu!")}
+movieGrid.addEventListener("click",event=>{const btn=event.target.closest("button[data-action]");if(!btn)return;if(btn.dataset.action==="watch")openMovieByTitle(btn.dataset.title);if(btn.dataset.action==="series")openSeriesByTitle(btn.dataset.title);if(btn.dataset.action==="download")downloadFile(btn.dataset.file,btn.dataset.title,btn)});
+document.getElementById("episodeList").addEventListener("click",event=>{const watch=event.target.closest("[data-episode]");if(watch){playEpisode(Number(watch.dataset.episode));return}const down=event.target.closest("[data-file]");if(down)downloadFile(down.dataset.file,down.dataset.title,down)});
+
+/* SUPABASE AUTHENTICATION */
+const SUPABASE_URL="https://nolmhtrxmiqhoiwydwjp.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_KFd3obOayP1hyPuQDtQV6Q_pXfH-G98";
+let authClient=null;
+const authOverlay=document.getElementById("authOverlay"),authMessage=document.getElementById("authMessage");
+function openAuth(form="signup"){authOverlay.classList.add("open");showAuthForm(form)}
+function closeAuth(){authOverlay.classList.remove("open")}
+function showAuthForm(form){
+ document.querySelectorAll(".auth-card form").forEach(f=>f.classList.remove("active"));
+ const id=form==="signup"?"signupForm":form==="login"?"loginForm":form;
+ document.getElementById(id)?.classList.add("active");authMessage.classList.remove("show");authMessage.textContent="";
+}
+function showAuthMessage(message){authMessage.textContent=message;authMessage.classList.add("show")}
+function authReady(){
+ if(!window.supabase){showAuthMessage("Supabase ntiyafungutse. Reba internet yawe.");return false}
+ if(!authClient)authClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ return true;
+}
+async function runAuth(form,action){
+ const button=form.querySelector('[type="submit"]');button.disabled=true;
+ try{await action()}catch(error){showAuthMessage(error.message||"Habaye ikibazo. Ongera ugerageze.")}
+ finally{button.disabled=false}
 }
 
-function displayMovies(list) {
-  movieGrid.innerHTML = "";
-  emptyMessage.style.display = list.length ? "none" : "block";
-
-  list.forEach(movie => {
-    const card = document.createElement("article");
-    card.className = "movie-card";
-
-    const action = movie.type === "series"
-      ? `<button class="watch" data-action="series" data-title="${escapeHTML(movie.title)}">Episodes</button>`
-      : `<button class="watch" data-action="watch" data-title="${escapeHTML(movie.title)}">▶ Watch</button>`;
-
-    const download = movie.type === "movie"
-      ? `<button class="download" data-action="download" data-file="${escapeHTML(movie.file)}" data-title="${escapeHTML(movie.title)}">↓ Download</button>`
-      : `<button class="download" data-action="series" data-title="${escapeHTML(movie.title)}">Episodes</button>`;
-
-    card.innerHTML = `
-      <div class="poster">
-        <img src="${filePath(movie.img)}" alt="${escapeHTML(movie.title)}" loading="lazy"
-             onerror="this.style.display='none'">
-        <span class="badge">${movie.type === "series" ? "SERIES" : "MOVIE"}</span>
-      </div>
-      <div class="movie-info">
-        <div class="movie-title">${escapeHTML(movie.title)}</div>
-        <div class="meta">${movie.year} • ${escapeHTML(movie.genre)} • ${escapeHTML(movie.interpreter)}</div>
-        <div class="card-buttons">${action}${download}</div>
-      </div>`;
-    movieGrid.appendChild(card);
+/* SIGN UP + NOTIFICATION */
+document.getElementById("signupForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ runAuth(event.currentTarget,async()=>{
+  if(!authReady())return;
+  const email=document.getElementById("signupEmail").value.trim();
+  const password=document.getElementById("signupPassword").value;
+  if(password.length<8)throw new Error("Password igomba kugira nibura inyuguti 8.");
+  const {data,error}=await authClient.auth.signUp({
+   email,password,
+   options:{emailRedirectTo:window.location.origin+window.location.pathname}
   });
-}
+  if(error)throw error;
 
-function displayTrending() {
-  const container = document.getElementById("trendingList");
-  container.innerHTML = "";
-  movies.slice(0, 7).forEach(movie => {
-    const card = document.createElement("div");
-    card.className = "trend";
-    card.innerHTML = `<img src="${filePath(movie.img || "")}" alt="${escapeHTML(movie.title)}"
-      onerror="this.style.display='none'"><strong>${escapeHTML(movie.title)}</strong>`;
-    card.onclick = () => movie.type === "series"
-      ? openSeriesByTitle(movie.title) : openMovieByTitle(movie.title);
-    container.appendChild(card);
-  });
-}
-
-function createFilters() {
-  [...new Set(movies.map(m => m.year))].sort((a,b) => b-a)
-    .forEach(v => yearFilter.add(new Option(v,v)));
-  [...new Set(movies.map(m => m.genre))].sort()
-    .forEach(v => genreFilter.add(new Option(v,v)));
-  [...new Set(movies.map(m => m.interpreter))].sort()
-    .forEach(v => interpreterFilter.add(new Option(v,v)));
-}
-
-function applyFilters() {
-  let result = [...movies];
-  const search = searchInput.value.trim().toLowerCase();
-
-  if (currentCategory !== "all")
-    result = result.filter(m => m.type === currentCategory);
-  if (search)
-    result = result.filter(m => m.title.toLowerCase().includes(search));
-  if (yearFilter.value)
-    result = result.filter(m => String(m.year) === yearFilter.value);
-  if (genreFilter.value)
-    result = result.filter(m => m.genre === genreFilter.value);
-  if (interpreterFilter.value)
-    result = result.filter(m => m.interpreter === interpreterFilter.value);
-
-  if (sortFilter.value === "oldest") result.sort((a,b) => a.year-b.year);
-  else if (sortFilter.value === "az") result.sort((a,b) => a.title.localeCompare(b.title));
-  else result.sort((a,b) => b.year-a.year);
-
-  displayMovies(result);
-}
-
-function setCategory(category, button) {
-  currentCategory = category;
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  button.classList.add("active");
-  applyFilters();
-}
-
-function resetFilters() {
-  currentCategory = "all";
-  yearFilter.value = "";
-  genreFilter.value = "";
-  interpreterFilter.value = "";
-  sortFilter.value = "newest";
-  searchInput.value = "";
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.getElementById("tabAll").classList.add("active");
-  applyFilters();
-}
-
-function findMovie(title) {
-  return movies.find(m => m.title === title);
-}
-function hideAllPages() {
-  document.getElementById("homePage").style.display = "none";
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-}
-function openMovieByTitle(title) {
-  const movie = findMovie(title);
-  if (movie) openMovie(movie);
-}
-function openMovie(movie) {
-  hideAllPages();
-  document.getElementById("watchPage").classList.add("active");
-  const video = document.getElementById("mainVideo");
-  video.pause();
-  video.src = filePath(movie.file);
-  video.load();
-  document.getElementById("watchTitle").textContent = movie.title;
-  document.getElementById("watchMeta").textContent =
-    `${movie.year} • ${movie.genre} • ${movie.interpreter}`;
-  document.getElementById("watchDownloadButton").onclick =
-    function() { downloadFile(movie.file, movie.title, this); };
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-function openSeriesByTitle(title) {
-  const series = findMovie(title);
-  if (!series) return;
-  currentSeries = series;
-  hideAllPages();
-  document.getElementById("seriesPage").classList.add("active");
-  document.getElementById("seriesTitle").textContent = series.title;
-  document.getElementById("seriesMeta").textContent =
-    `${series.year} • ${series.genre} • ${series.interpreter}`;
-
-  const list = document.getElementById("episodeList");
-  list.innerHTML = "";
-  (series.episodes || []).forEach((episode,index) => {
-    const item = document.createElement("div");
-    item.className = "episode";
-    item.innerHTML = `<h3>Episode ${index+1}</h3>
-      <button data-episode="${index}">▶ Watch</button>
-      <button data-file="${escapeHTML(episode)}"
-        data-title="${escapeHTML(series.title+" Episode "+(index+1))}">↓ Download</button>`;
-    list.appendChild(item);
-  });
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-function playEpisode(index) {
-  if (!currentSeries) return;
-  const episode = currentSeries.episodes[index];
-  hideAllPages();
-  document.getElementById("episodePage").classList.add("active");
-  const video = document.getElementById("episodeVideo");
-  video.pause();
-  video.src = filePath(episode);
-  video.load();
-  document.getElementById("episodeTitle").textContent =
-    `${currentSeries.title} - Episode ${index+1}`;
-  document.getElementById("episodeDownloadButton").onclick =
-    function() { downloadFile(episode, currentSeries.title+" Episode "+(index+1), this); };
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-async function downloadFile(file, title, button) {
-  if (!button) return;
-  const original = button.innerHTML;
-  button.disabled = true;
-  button.innerHTML = "Please wait...";
-  try {
-    const response = await fetch(filePath(file));
-    if (!response.ok) throw new Error("Video ntiyabonetse");
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = title.replace(/[^\w\s-]/g,"").replace(/\s+/g,"_")+".mp4";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-  } catch (error) {
-    if (confirm("Download ntiyakunze. Ushaka gufungura video muri browser?"))
-      window.open(filePath(file), "_blank", "noopener");
-  } finally {
-    button.disabled = false;
-    button.innerHTML = original;
+  // This calls the Netlify function; the function must exist on the deployed site.
+  try{
+   const response=await fetch("/.netlify/functions/notify-signup",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({registrationConfirmed:true,email})
+   });
+   if(!response.ok)console.error("Signup notification failed:",await response.text());
+  }catch(notificationError){
+   console.error("Signup notification error:",notificationError);
   }
-}
 
-function backToMovies() {
-  document.getElementById("mainVideo").pause();
-  document.getElementById("episodeVideo").pause();
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById("homePage").style.display = "block";
-  document.getElementById("moviesSection").scrollIntoView({behavior:"smooth"});
-}
-function backToSeries() {
-  document.getElementById("episodeVideo").pause();
-  document.getElementById("episodePage").classList.remove("active");
-  document.getElementById("seriesPage").classList.add("active");
-}
-function goHome() {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById("homePage").style.display = "block";
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-function scrollToMovies() {
-  document.getElementById("moviesSection").scrollIntoView({behavior:"smooth"});
-}
-function scrollToTrending() {
-  document.getElementById("trendingSection").scrollIntoView({behavior:"smooth"});
-}
-function showMobileMoney() {
-  alert("Support KEGAFILMS\nMTN MoMo: 0794186614\nMurakoze ku nkunga yanyu!");
-}
-
-movieGrid.addEventListener("click", event => {
-  const btn = event.target.closest("button[data-action]");
-  if (!btn) return;
-  if (btn.dataset.action === "watch") openMovieByTitle(btn.dataset.title);
-  if (btn.dataset.action === "series") openSeriesByTitle(btn.dataset.title);
-  if (btn.dataset.action === "download")
-    downloadFile(btn.dataset.file, btn.dataset.title, btn);
+  showAuthMessage(data.session
+   ?"Konti yawe yakozwe neza!"
+   :"Kwiyandikisha byakiriwe. Reba email yawe na Spam/Junk kugira ngo wemeze konti.");
+ });
 });
 
-document.getElementById("episodeList").addEventListener("click", event => {
-  const watch = event.target.closest("[data-episode]");
-  if (watch) { playEpisode(Number(watch.dataset.episode)); return; }
-  const down = event.target.closest("[data-file]");
-  if (down) downloadFile(down.dataset.file, down.dataset.title, down);
+document.getElementById("loginForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ runAuth(event.currentTarget,async()=>{
+  if(!authReady())return;
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
+  const {error}=await authClient.auth.signInWithPassword({email,password});
+  if(error)throw error;
+  showAuthMessage("Winjiye muri konti yawe neza.");await updateAuthUI();
+ });
 });
-
-/* Supabase Authentication */
-const SUPABASE_URL = "https://nolmhtrxmiqhoiwydwjp.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_KFd3obOayP1hyPuQDtQV6Q_pXfH-G98";
-let authClient = null;
-
-const authOverlay = document.getElementById("authOverlay");
-const authMessage = document.getElementById("authMessage");
-
-function openAuth(form="signup") {
-  authOverlay.classList.add("open");
-  showAuthForm(form);
-}
-function closeAuth() {
-  authOverlay.classList.remove("open");
-}
-function showAuthForm(form) {
-  document.querySelectorAll(".auth-card form").forEach(f => f.classList.remove("active"));
-  const id = form === "signup" ? "signupForm" :
-             form === "login" ? "loginForm" : form;
-  document.getElementById(id)?.classList.add("active");
-  authMessage.classList.remove("show");
-  authMessage.textContent = "";
-}
-function showAuthMessage(message) {
-  authMessage.textContent = message;
-  authMessage.classList.add("show");
-}
-function authReady() {
-  if (!window.supabase) {
-    showAuthMessage("Supabase ntiyafungutse. Reba internet yawe.");
-    return false;
-  }
-  if (!authClient)
-    authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-  return true;
-}
-async function runAuth(form, action) {
-  const button = form.querySelector('[type="submit"]');
-  button.disabled = true;
-  try { await action(); }
-  catch (error) { showAuthMessage(error.message || "Habaye ikibazo. Ongera ugerageze."); }
-  finally { button.disabled = false; }
-}
-
-document.getElementById("signupForm").addEventListener("submit", event => {
-  event.preventDefault();
-  runAuth(event.currentTarget, async () => {
-    if (!authReady()) return;
-    const email = document.getElementById("signupEmail").value.trim();
-    const password = document.getElementById("signupPassword").value;
-    const {data,error} = await authClient.auth.signUp({
-      email, password,
-      options: {emailRedirectTo: window.location.origin + window.location.pathname}
-    });
-    if (error) throw error;
-    showAuthMessage(data.session
-      ? "Konti yakozwe neza."
-      : "Reba email yawe na Spam/Junk kugira ngo wemeze konti.");
-  });
+document.getElementById("forgotForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ runAuth(event.currentTarget,async()=>{
+  if(!authReady())return;
+  const email=document.getElementById("forgotEmail").value.trim();
+  const redirectTo=window.location.origin+window.location.pathname+"?reset=1";
+  const {error}=await authClient.auth.resetPasswordForEmail(email,{redirectTo});
+  if(error)throw error;
+  showAuthMessage("Niba email ifite konti, amabwiriza yo guhindura password azoherezwa.");
+ });
 });
-
-document.getElementById("loginForm").addEventListener("submit", event => {
-  event.preventDefault();
-  runAuth(event.currentTarget, async () => {
-    if (!authReady()) return;
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
-    const {error} = await authClient.auth.signInWithPassword({email,password});
-    if (error) throw error;
-    showAuthMessage("Winjiye muri konti yawe neza.");
-    await updateAuthUI();
-  });
+document.getElementById("resetForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ runAuth(event.currentTarget,async()=>{
+  if(!authReady())return;
+  const password=document.getElementById("newPassword").value;
+  const confirmPassword=document.getElementById("confirmPassword").value;
+  if(password.length<8)throw new Error("Password igomba kugira nibura inyuguti 8.");
+  if(password!==confirmPassword)throw new Error("Password zombi ntizihuye.");
+  const {error}=await authClient.auth.updateUser({password});
+  if(error)throw error;
+  history.replaceState({},document.title,window.location.pathname);
+  showAuthForm("login");showAuthMessage("Password yahinduwe neza. Ushobora kongera kwinjira.");
+ });
 });
-
-document.getElementById("forgotForm").addEventListener("submit", event => {
-  event.preventDefault();
-  runAuth(event.currentTarget, async () => {
-    if (!authReady()) return;
-    const email = document.getElementById("forgotEmail").value.trim();
-    const redirectTo = window.location.origin + window.location.pathname + "?reset=1";
-    const {error} = await authClient.auth.resetPasswordForEmail(email,{redirectTo});
-    if (error) throw error;
-    showAuthMessage("Niba email ifite konti, amabwiriza yo guhindura password azoherezwa.");
-  });
-});
-
-document.getElementById("resetForm").addEventListener("submit", event => {
-  event.preventDefault();
-  runAuth(event.currentTarget, async () => {
-    if (!authReady()) return;
-    const password = document.getElementById("newPassword").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
-    if (password.length < 8) throw new Error("Password igomba kugira nibura inyuguti 8.");
-    if (password !== confirmPassword) throw new Error("Password zombi ntizihuye.");
-    const {error} = await authClient.auth.updateUser({password});
-    if (error) throw error;
-    showAuthMessage("Password yahinduwe neza. Ushobora kongera kwinjira.");
-    history.replaceState({},document.title,window.location.pathname);
-    showAuthForm("login");
-  });
-});
-
-async function updateAuthUI() {
-  if (!authClient) return;
-  const {data:{user}} = await authClient.auth.getUser();
-  document.getElementById("authButtons").hidden = !!user;
-  document.getElementById("userAccount").hidden = !user;
-  document.getElementById("userEmail").textContent = user?.email || "";
+async function updateAuthUI(){
+ if(!authClient)return;
+ const {data:{user},error}=await authClient.auth.getUser();
+ if(error){console.error(error);return}
+ document.getElementById("authButtons").hidden=!!user;
+ document.getElementById("userAccount").hidden=!user;
+ document.getElementById("userEmail").textContent=user?.email||"";
 }
-async function logoutUser() {
-  if (!authReady()) return;
-  const {error} = await authClient.auth.signOut();
-  if (error) { showAuthMessage(error.message); return; }
-  await updateAuthUI();
-  closeAuth();
+async function logoutUser(){
+ if(!authReady())return;
+ const {error}=await authClient.auth.signOut();
+ if(error){showAuthMessage(error.message);return}
+ await updateAuthUI();closeAuth();
 }
+authOverlay.addEventListener("click",event=>{if(event.target===authOverlay)closeAuth()});
+document.addEventListener("keydown",event=>{if(event.key==="Escape")closeAuth()});
 
-authOverlay.addEventListener("click", event => {
-  if (event.target === authOverlay) closeAuth();
-});
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape") closeAuth();
-});
-
-if (window.supabase) {
-  authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-  authClient.auth.onAuthStateChange((event, session) => {
-    document.getElementById("authButtons").hidden = !!session?.user;
-    document.getElementById("userAccount").hidden = !session?.user;
-    document.getElementById("userEmail").textContent = session?.user?.email || "";
-    if (event === "PASSWORD_RECOVERY") openAuth("resetForm");
-  });
-  updateAuthUI();
+if(window.supabase){
+ authClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ authClient.auth.onAuthStateChange((event,session)=>{
+  document.getElementById("authButtons").hidden=!!session?.user;
+  document.getElementById("userAccount").hidden=!session?.user;
+  document.getElementById("userEmail").textContent=session?.user?.email||"";
+  if(event==="PASSWORD_RECOVERY")openAuth("resetForm");
+ });
+ updateAuthUI();
 }
-if (new URLSearchParams(window.location.search).get("reset") === "1")
-  openAuth("resetForm");
-
-createFilters();
-displayTrending();
-displayMovies(movies);
+if(new URLSearchParams(window.location.search).get("reset")==="1")openAuth("resetForm");
+createFilters();displayTrending();displayMovies(movies);
 </script>
 </body>
 </html>
