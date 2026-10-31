@@ -1,79 +1,92 @@
-
 <!DOCTYPE html>
 <html lang="rw">
-<head><meta name="google-site-verification" content="fho2hafgfbxngSSl1E9UtPM4xRp3gDtjN2kWQtMttoA" />
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#080808">
-<title>KEGAFILMS.NET | Movies & Series</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{--red:#e50914;--bg:#080808;--card:#171717;--muted:#aaa}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:#fff;font-family:Inter,Arial,sans-serif;overflow-x:hidden}
-button,input,select{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
-header{position:sticky;top:0;z-index:100;min-height:70px;padding:12px 5%;background:rgba(12,12,12,.97);border-bottom:1px solid #252525;display:flex;justify-content:space-between;align-items:center;gap:15px}
-.logo{font-size:23px;font-weight:900;white-space:nowrap}.red,.logo span{color:var(--red)}
-.header-right,.auth-buttons,.user-account{display:flex;align-items:center;gap:9px}
-.user-account[hidden],.auth-buttons[hidden]{display:none}
-.user-account span{max-width:150px;overflow:hidden;text-overflow:ellipsis;font-size:12px}
-.search{width:min(260px,27vw)}input,select{background:#171717;color:white;border:1px solid #393939;border-radius:7px;padding:12px;outline:none}
-.search input{width:100%}input:focus,select:focus{border-color:var(--red)}
-.small-btn{border:1px solid #393939;padding:10px 13px;border-radius:7px;color:white;background:#191919;font-weight:800}
-.red-btn{background:var(--red);border-color:var(--red)}
-.hero{min-height:590px;padding:100px 5% 60px;display:flex;align-items:center;background:linear-gradient(90deg,#050505 0%,rgba(5,5,5,.85) 40%,rgba(5,5,5,.2)),linear-gradient(0deg,var(--bg),transparent 40%),url("agent kim s01.jpg") center/cover no-repeat}
-.hero-content{max-width:650px}.eyebrow{color:var(--red);text-transform:uppercase;letter-spacing:3px;font-weight:800;margin-bottom:15px}
-.hero h1{font-size:clamp(42px,7vw,76px);line-height:1.05}.hero p{color:#ccc;line-height:1.8;margin-top:18px}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}
-.btn{padding:13px 20px;border:0;border-radius:6px;font-weight:800}
-.primary{background:var(--red);color:white}.secondary{background:white;color:black}.dark-btn{background:#303030;color:white}
-.support{max-width:440px;padding:17px;margin-top:28px;border:1px solid #383838;border-radius:10px;background:rgba(0,0,0,.6)}
-.support p{margin-top:5px;font-size:13px}
-section.content{padding:45px 5%}.section-heading{font-size:25px;margin-bottom:22px}
-.trending{display:flex;gap:14px;overflow-x:auto;margin-bottom:35px}
-.trend{position:relative;flex:0 0 220px;height:125px;overflow:hidden;border-radius:9px;background:#222;cursor:pointer}
-.trend img{width:100%;height:100%;object-fit:cover}
-.trend strong{position:absolute;inset:auto 0 0;padding:15px 10px 10px;background:linear-gradient(transparent,#000)}
-.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-.filters select{width:100%}.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
-.tab{padding:9px 17px;border-radius:25px;border:1px solid #393939;color:#ddd;background:#171717}
-.tab.active{background:var(--red);border-color:var(--red)}
-.movie-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:17px}
-.movie-card{min-width:0;background:var(--card);border:1px solid #242424;border-radius:9px;overflow:hidden;transition:.2s}
-.movie-card:hover{transform:translateY(-4px)}
-.poster{height:280px;position:relative;background:#222}.poster img{width:100%;height:100%;object-fit:cover}
-.badge{position:absolute;left:8px;top:8px;background:var(--red);padding:5px 7px;border-radius:4px;font-size:10px;font-weight:900}
-.movie-info{padding:12px}.movie-title{font-size:14px;font-weight:800}
-.meta{color:#aaa;font-size:11px;margin-top:8px;line-height:1.7}
-.card-buttons{display:grid;gap:7px;margin-top:13px}
-.card-buttons button{padding:9px 5px;border:0;border-radius:5px;font-size:12px;font-weight:800}
-.watch{background:var(--red);color:white}.download{background:#303030;color:white}
-.empty{display:none;text-align:center;padding:50px;color:#aaa}
-.page{display:none;min-height:80vh;padding:35px 5%}.page.active{display:block}
-.player{max-width:1100px;margin:auto}.player video{width:100%;max-height:650px;background:black}
-.player h1{margin:20px 0 10px}.back{margin-bottom:20px}
-.episodes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:25px}
-.episode{background:#191919;border:1px solid #333;padding:15px;border-radius:8px}
-.episode button{margin:10px 5px 0 0;padding:8px;border:0;border-radius:5px;color:white;background:var(--red)}
-footer{text-align:center;padding:35px 5%;border-top:1px solid #282828;color:#aaa;line-height:2}
-.whatsapp{position:fixed;z-index:90;right:18px;bottom:18px;width:52px;height:52px;display:grid;place-items:center;background:#25d366;color:white;border-radius:50%;font-size:26px}
-.overlay{position:fixed;inset:0;z-index:500;display:none;justify-content:center;align-items:center;padding:15px;background:rgba(0,0,0,.85)}
-.overlay.open{display:flex}.auth-card{position:relative;width:100%;max-width:420px;max-height:90vh;overflow:auto;padding:28px;border:1px solid #333;border-radius:14px;background:#171717}
-.close{position:absolute;right:12px;top:10px;border:0;border-radius:50%;padding:7px 12px;background:#333;color:white}
-.auth-card h2{margin-bottom:15px}.auth-card label{display:block;margin:14px 0 6px;font-size:13px}
-.auth-card input{width:100%}.auth-card form{display:none}.auth-card form.active{display:block}
-.submit{width:100%;padding:13px;margin-top:18px;border:0;border-radius:6px;background:var(--red);color:white;font-weight:900}
-.auth-link{margin-top:14px;border:0;background:transparent;color:#ff555d}
-.message{display:none;margin-top:15px;padding:12px;border-radius:7px;background:#292929;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
-.message.show{display:block}
-@media(max-width:1050px){.movie-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.episodes{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:780px){header{padding:12px 3%}.movie-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.poster{height:240px}.filters{grid-template-columns:repeat(2,1fr)}.episodes{grid-template-columns:repeat(2,1fr)}.hero{min-height:530px}}
-@media(max-width:540px){header{flex-wrap:wrap}.logo{font-size:18px}.header-right{flex:1;justify-content:flex-end}.search{width:110px}.search input{padding:9px;font-size:11px}.small-btn{padding:8px;font-size:10px}.user-account span{display:none}.hero{min-height:540px;padding:70px 5% 40px}section.content{padding:35px 4%}.movie-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.poster{height:220px}.movie-info{padding:9px}.movie-title{font-size:12px}.card-buttons button{font-size:11px}.episodes{grid-template-columns:1fr}}
-</style>
+<head>
+    <!-- Google Site Verification Code Provided -->
+    <meta name="google-site-verification" content="fho2hafgfbxngSSl1E9UtPM4xRp3gDtjN2kWQtMttoA" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080808">
+    <title>KEGAFILMS.NET | Movies & Series</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- EmailJS Browser SDK Integration -->
+    <script type="text/javascript" src="https://jsdelivr.net"></script>
+    <script type="text/javascript">
+        (function() {
+            // Initializing EmailJS with your active Public Key
+            emailjs.init("FUfUp81rX7_4-GeJH");
+        })();
+    </script>
+
+    <style>
+    :root{--red:#e50914;--bg:#080808;--card:#171717;--muted:#aaa}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:#fff;font-family:Inter,Arial,sans-serif;overflow-x:hidden}
+    button,input,select{font:inherit}button{cursor:pointer}a{text-decoration:none;color:inherit}
+    header{position:sticky;top:0;z-index:100;min-height:70px;padding:12px 5%;background:rgba(12,12,12,.97);border-bottom:1px solid #252525;display:flex;justify-content:space-between;align-items:center;gap:15px}
+    .logo{font-size:23px;font-weight:900;white-space:nowrap}.red,.logo span{color:var(--red)}
+    .header-right,.auth-buttons,.user-account{display:flex;align-items:center;gap:9px}
+    .user-account[hidden],.auth-buttons[hidden]{display:none}
+    .user-account span{max-width:150px;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+    .search{width:min(260px,27vw)}input,select{background:#171717;color:white;border:1px solid #393939;border-radius:7px;padding:12px;outline:none}
+    .search input{width:100%}input:focus,select:focus{border-color:var(--red)}
+    .small-btn{border:1px solid #393939;padding:10px 13px;border-radius:7px;color:white;background:#191919;font-weight:800}
+    .red-btn{background:var(--red);border-color:var(--red)}
+    .hero{min-height:590px;padding:100px 5% 60px;display:flex;align-items:center;background:linear-gradient(90deg,#050505 0%,rgba(5,5,5,.85) 40%,rgba(5,5,5,.2)),linear-gradient(0deg,var(--bg),transparent 40%),url("agent kim s01.jpg") center/cover no-repeat}
+    .hero-content{max-width:650px}.eyebrow{color:var(--red);text-transform:uppercase;letter-spacing:3px;font-weight:800;margin-bottom:15px}
+    .hero h1{font-size:clamp(42px,7vw,76px);line-height:1.05}.hero p{color:#ccc;line-height:1.8;margin-top:18px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}
+    .btn{padding:13px 20px;border:0;border-radius:6px;font-weight:800}
+    .primary{background:var(--red);color:white}.secondary{background:white;color:black}.dark-btn{background:#303030;color:white}
+    .support{max-width:440px;padding:17px;margin-top:28px;border:1px solid #383838;border-radius:10px;background:rgba(0,0,0,.6)}
+    .support p{margin-top:5px;font-size:13px}
+    section.content{padding:45px 5%}.section-heading{font-size:25px;margin-bottom:22px}
+    .trending{display:flex;gap:14px;overflow-x:auto;margin-bottom:35px}
+    .trend{position:relative;flex:0 0 220px;height:125px;overflow:hidden;border-radius:9px;background:#222;cursor:pointer}
+    .trend img{width:100%;height:100%;object-fit:cover}
+    .trend strong{position:absolute;inset:auto 0 0;padding:15px 10px 10px;background:linear-gradient(transparent,#000)}
+    .filters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+    .filters select{width:100%}.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+    .tab{padding:9px 17px;border-radius:25px;border:1px solid #393939;color:#ddd;background:#171717}
+    .tab.active{background:var(--red);border-color:var(--red)}
+    .movie-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:17px}
+    .movie-card{min-width:0;background:var(--card);border:1px solid #242424;border-radius:9px;overflow:hidden;transition:.2s}
+    .movie-card:hover{transform:translateY(-4px)}
+    .poster{height:280px;position:relative;background:#222}.poster img{width:100%;height:100%;object-fit:cover}
+    .badge{position:absolute;left:8px;top:8px;background:var(--red);padding:5px 7px;border-radius:4px;font-size:10px;font-weight:900}
+    .movie-info{padding:12px}.movie-title{font-size:14px;font-weight:800}
+    .meta{color:#aaa;font-size:11px;margin-top:8px;line-height:1.7}
+    .card-buttons{display:grid;gap:7px;margin-top:13px}
+    .card-buttons button{padding:9px 5px;border:0;border-radius:5px;font-size:12px;font-weight:800}
+    .watch{background:var(--red);color:white}.download{background:#303030;color:white}
+    .empty{display:none;text-align:center;padding:50px;color:#aaa}
+    .page{display:none;min-height:80vh;padding:35px 5%}.page.active{display:block}
+    .player{max-width:1100px;margin:auto}.player video{width:100%;max-height:650px;background:black}
+    .player h1{margin:20px 0 10px}.back{margin-bottom:20px}
+    .episodes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:25px}
+    .episode{background:#191919;border:1px solid #333;padding:15px;border-radius:8px}
+    .episode button{margin:10px 5px 0 0;padding:8px;border:0;border-radius:5px;color:white;background:var(--red)}
+    footer{text-align:center;padding:35px 5%;border-top:1px solid #282828;color:#aaa;line-height:2}
+    .whatsapp{position:fixed;z-index:90;right:18px;bottom:18px;width:52px;height:52px;display:grid;place-items:center;background:#25d366;color:white;border-radius:50%;font-size:26px}
+    .overlay{position:fixed;inset:0;z-index:500;display:none;justify-content:center;align-items:center;padding:15px;background:rgba(0,0,0,.85)}
+    .overlay.open{display:flex}.auth-card{position:relative;width:100%;max-width:420px;max-height:90vh;overflow:auto;padding:28px;border:1px solid #333;border-radius:14px;background:#171717}
+    .close{position:absolute;right:12px;top:10px;border:0;border-radius:50%;padding:7px 12px;background:#333;color:white}
+    .auth-card h2{margin-bottom:15px}.auth-card label{display:block;margin:14px 0 6px;font-size:13px}
+    .auth-card input{width:100%}.auth-card form{display:none}.auth-card form.active{display:block}
+    .submit{width:100%;padding:13px;margin-top:18px;border:0;border-radius:6px;background:var(--red);color:white;font-weight:900}
+    .auth-link{margin-top:14px;border:0;background:transparent;color:#ff555d}
+    .message{display:none;margin-top:15px;padding:12px;border-radius:7px;background:#292929;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+    .message.show{display:block}
+    @media(max-width:1050px){.movie-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.episodes{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:780px){header{padding:12px 3%}.movie-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.poster{height:240px}.filters{grid-template-columns:repeat(2,1fr)}.episodes{grid-template-columns:repeat(2,1fr)}.hero{min-height:530px}}
+    @media(max-width:540px){header{flex-wrap:wrap}.logo{font-size:18px}.header-right{flex:1;justify-content:flex-end}.search{width:110px}.search input{padding:9px;font-size:11px}.small-btn{padding:8px;font-size:10px}.user-account span{display:none}.hero{min-height:540px;padding:70px 5% 40px}section.content{padding:35px 4%}.movie-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.poster{height:220px}.movie-info{padding:9px}.movie-title{font-size:12px}.card-buttons button{font-size:11px}.episodes{grid-template-columns:1fr}}
+    </style>
 </head>
 <body>
 <header>
@@ -155,7 +168,67 @@ footer{text-align:center;padding:35px 5%;border-top:1px solid #282828;color:#aaa
 <div class="message" id="authMessage" role="status"></div>
 </div></div>
 
-<script>
+<script> 
+
+ // =========================================================================
+// KEGAFILMS - EMAIL VERIFICATION INTERACTION ENGINE (JAVASCRIPT)
+// =========================================================================
+
+// 1. Function to trigger and dispatch the verification email via EmailJS
+function sendVerificationEmail(recipientEmail) {
+    if (!recipientEmail || recipientEmail.trim() === "") {
+        alert("Please enter a valid email address first.");
+        return;
+    }
+
+    // Generates a cryptographically simulated 6-digit random code
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Structuring parameters to match your EmailJS Template layout
+    const templateParams = {
+        to_email: recipientEmail,
+        app_name: "Kegafilms",
+        otp_code: generatedOtp,
+        valid_for: "10 minutes",
+        expiry_date: new Date(Date.now() + 10 * 60 * 1000).toLocaleString()
+    };
+
+    console.log("Attempting to dispatch OTP code via EmailJS...");
+
+    // Executing the EmailJS delivery mechanism
+    // ⚠️ ACTION REQUIRED: Replace 'YOUR_TEMPLATE_ID' with your real Template ID from EmailJS!
+    emailjs.send('service_nprzouw', 'YOUR_TEMPLATE_ID', templateParams)
+    .then((response) => {
+        console.log('Email dispatched successfully!', response.status, response.text);
+        alert('A 6-digit verification code has been sent to your email address!');
+        
+        // Save the correct code into session storage for client-side matching
+        sessionStorage.setItem('valid_otp', generatedOtp);
+    })
+    .catch((error) => {
+        console.error('Email delivery breakdown:', error);
+        alert('Failed to send verification email. Please check your network and try again.');
+    });
+}
+
+// 2. Function to match and verify the code typed by the user
+function checkUserEnteredCode(inputCode) {
+    const activeCorrectOtp = sessionStorage.getItem('valid_otp');
+    
+    if (!inputCode || inputCode.trim() === "") {
+        alert("Please key in the OTP code sent to your inbox first.");
+        return false;
+    }
+
+    if (inputCode.trim() === activeCorrectOtp) {
+        alert("🎉 Success! Your email address has been verified.");
+        return true; 
+    } else {
+        alert("❌ The code you entered is invalid. Please double check and try again.");
+        return false;
+    }
+ {
+ 
 const movies=[
 {title:"ALPHA A",type:"movie",file:"ALPHA_A.mp4",img:"ALPHA.jpg",year:2026,genre:"Action",interpreter:"Rocky"},
 {title:"ALPHA B",type:"movie",file:"ALPHA_B.mp4",img:"ALPHA.jpg",year:2026,genre:"Action",interpreter:"Perfect"},
@@ -177,10 +250,7 @@ function displayMovies(list){
   const card=document.createElement("article");card.className="movie-card";
   const action=movie.type==="series"?`<button class="watch" data-action="series" data-title="${escapeHTML(movie.title)}">Episodes</button>`:`<button class="watch" data-action="watch" data-title="${escapeHTML(movie.title)}">▶ Watch</button>`;
   const download=movie.type==="movie"?`<button class="download" data-action="download" data-file="${escapeHTML(movie.file)}" data-title="${escapeHTML(movie.title)}">↓ Download</button>`:`<button class="download" data-action="series" data-title="${escapeHTML(movie.title)}">Episodes</button>`;
-  card.innerHTML=`<div class="poster"><img src="${filePath(movie.img)}" alt="${escapeHTML(movie.title)}" loading="lazy" onerror="this.style.display='none'"><span class="badge">${movie.type==="series"?"SERIES":"MOVIE"}</span></div><div class="movie-info"><div class="movie-title">${escapeHTML(movie.title)}</div><div class="meta">${movie.year} • ${escapeHTML(movie.genre)} • ${escapeHTML(movie.interpreter)}</div><div class="card-buttons">${action}${download}</div></div>`;
-  movieGrid.appendChild(card);
- });
-}
+  card.innerHTML=`<div class="poster"><img src="${filePath(movie.img)}" alt="${escapeHTML(movie.title)}" loading="lazy" onerror="this.style.display='none'"><span class="badge">${movie.type==="series"?"SERIES":"MOVIE"}</span></div><div class="movie-info"><div class="movie-title">${escapeHTML(movie.title)}</div><div class="meta">${movie.year} • ${escapeHTML(movie.genre)} • ${escapeHTML(movie.interpreter)}</div><div class="card-buttons">${actio
 function displayTrending(){
  const container=document.getElementById("trendingList");container.innerHTML="";
  movies.forEach(movie=>{const card=document.createElement("div");card.className="trend";
