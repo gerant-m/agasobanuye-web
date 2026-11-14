@@ -168,14 +168,15 @@ body.admin-mode #adminPanel.open{display:block!important}
 <a class="whatsapp" href="https://wa.me/250794186614" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <div class="overlay" id="authOverlay"><div class="auth-card"><button class="close" onclick="closeAuth()" aria-label="Close">✕</button><h2>KEGA<span class="red">FILMS</span></h2><p style="color:#aaa;font-size:13px">Kora konti yawe kuri KEGAFILMS.</p>
 <form id="signupForm" class="active"><h3>Create Account</h3><label>Email</label><input id="signupEmail" type="email" autocomplete="email" required placeholder="you@example.com"><label>Password (nibura inyuguti 8)</label><input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required><button class="submit" type="submit">Create Account</button><button class="auth-link" type="button" onclick="showAuthForm('login')">Usanzwe ufite konti? Login</button></form>
-<form id="loginForm"><h3>Login</h3><label>Email</label><input id="loginEmail" type="email" autocomplete="email" value="mututsigerant@gmail.com" required><label>Password</label><input id="loginPassword" type="password" autocomplete="current-password" required><button class="submit" type="submit">Login</button><button class="auth-link" type="button" onclick="showAuthForm('forgotForm')">Wibagiwe password?</button><button class="auth-link" type="button" onclick="showAuthForm('signup')">Nta konti ufite? Sign Up</button></form>
+<form id="loginForm"><h3>Login</h3><label>Email</label><input id="loginEmail" type="email" autocomplete="email" required><label>Password</label><input id="loginPassword" type="password" autocomplete="current-password" required><button class="submit" type="submit">Login</button><button class="auth-link" type="button" onclick="$('forgotEmail').value=$('loginEmail').value;showAuthForm('forgotForm')">Wibagiwe password?</button><button class="auth-link" type="button" onclick="showAuthForm('signup')">Nta konti ufite? Sign Up</button></form>
 <form id="forgotForm"><h3>Forgot Password</h3><label>Email</label><input id="forgotEmail" type="email" required><button class="submit" type="submit">Send Reset Email</button><button class="auth-link" type="button" onclick="showAuthForm('login')">Subira kuri Login</button></form>
 <form id="resetForm"><h3>Set New Password</h3><label>Password nshya</label><input id="newPassword" type="password" minlength="8" required><label>Ongera wandike password</label><input id="confirmPassword" type="password" minlength="8" required><button class="submit" type="submit">Change Password</button></form><div class="message" id="authMessage" role="status"></div>
 </div></div>
 <script>
 /* ===================== APPWRITE SETTINGS =====================
-   Endpoint na Project ID byagenzuwe kuri screenshot ya Appwrite.
-   Ntushyire password muri JavaScript; uyandika muri Login form.
+   Project ID, Endpoint, Bucket ID na Team ID watanze byashyizwemo.
+   Uzuza DATABASE_ID nyuma yo kuyikura muri Appwrite Console.
+   Table ID: movies (igomba kuba ihuye n'iyo wakoze muri TablesDB).
 */
 const APPWRITE_ENDPOINT = "https://nyc.cloud.appwrite.io/v1";
 const APPWRITE_PROJECT_ID = "6ae47cb4002bf495d6c9";
@@ -184,14 +185,6 @@ const APPWRITE_TABLE_ID = "movies";
 const APPWRITE_BUCKET_ID = "6af6ca46002c4ae55632";
 const APPWRITE_ADMIN_TEAM_ID = "6af6cb37000a35a21c2a";
 
-if (!window.Appwrite) {
-  console.error("Appwrite SDK ntiyapakiwe. Reba internet/CDN.");
-  window.addEventListener("DOMContentLoaded", () => {
-    const msg = document.getElementById("authMessage");
-    if (msg) { msg.textContent = "Appwrite ntiyafungutse. Reba internet yawe wongere ufungure website."; msg.classList.add("show"); }
-  });
-  throw new Error("Appwrite SDK is not available on window.Appwrite");
-}
 const {Client, Account, TablesDB, Storage, Teams, ID, Query, Permission, Role} = Appwrite;
 const client = new Client().setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT_ID);
 const account = new Account(client);
@@ -322,11 +315,7 @@ async function checkAdminAccess(){
   try{
    const result=await teams.list();
    isAdmin=Array.isArray(result.teams)&&result.teams.some(t=>t.$id===APPWRITE_ADMIN_TEAM_ID);
-   if(!isAdmin) showAuthMessage("Winjiye neza, ariko konti yawe ntiri muri KEGAFILMS_ADMINS. Ongeramo Appwrite User ID yawe muri Team kugira ngo ubone Admin Dashboard.");
-  }catch(e){
-   console.error("Admin team check:",e);
-   showAuthMessage("Winjiye muri konti, ariko kugenzura Admin Team byanze: "+(e.message||"Reba Team ID n'uburenganzira bwa Appwrite."));
-  }
+  }catch(e){console.warn("Admin team check:",e)}
  }
  setPageForRole();
 }
@@ -426,29 +415,9 @@ $("adminLibraryList").addEventListener("click",async e=>{
 });
 function renderAdminDashboardAndLibrary(){renderAdminDashboard();renderAdminLibrary();}
 
-$("signupForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{await account.create({userId:ID.unique(),email:$("signupEmail").value.trim(),password:$("signupPassword").value,name:"KEGAFILMS User"});await account.createEmailPasswordSession({email:$("signupEmail").value.trim(),password:$("signupPassword").value});await account.createVerification({url:location.origin+location.pathname});showAuthMessage("Konti yawe yakozwe neza. Twohereje email yo kwemeza konti. Reba Inbox cyangwa Spam/Junk.");await updateAuthUI();closeAuth()}catch(err){showAuthMessage(err.message||"Signup yanze. Reba Appwrite Auth settings.")}finally{btn.disabled=false}});
-$("loginForm").addEventListener("submit",async e=>{
- e.preventDefault();
- const btn=e.currentTarget.querySelector("button[type=submit]");
- const email=$("loginEmail").value.trim();
- const password=$("loginPassword").value;
- btn.disabled=true;btn.textContent="Logging in...";
- try{
-  await account.createEmailPasswordSession({email,password});
-  await updateAuthUI();
-  closeAuth();
- }catch(err){
-  console.error("KEGAFILMS login error:",err);
-  const code=err.code?" (code "+err.code+")":"";
-  let message=err.message||"Login yanze.";
-  if(err.code===401) message="Email cyangwa password si byo. Ongera ugenzure.";
-  else if(err.code===404) message="Appwrite ntiyabonye project cyangwa auth endpoint. Ongera ugenzure Project ID na Endpoint.";
-  else if(err.code===429) message="Wagerageje kenshi. Tegereza gato wongere ugerageze.";
-  else if(err.message&&/fetch|network|failed to fetch/i.test(err.message)) message="Website ntiyabashije kugera kuri Appwrite. Reba internet na Web Platform hostname.";
-  showAuthMessage(message+code);
- }finally{btn.disabled=false;btn.textContent="Login";}
-});
-$("forgotForm").addEventListener("submit",async e=>{e.preventDefault();try{await account.createRecovery({email:$("forgotEmail").value.trim(),url:location.origin+location.pathname});showAuthMessage("Reba email yawe kugira ngo uhindure password.")}catch(err){showAuthMessage(err.message)}});
+$("signupForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{await account.create({userId:ID.unique(),email:$("signupEmail").value.trim(),password:$("signupPassword").value,name:"KEGAFILMS User"});await account.createEmailPasswordSession({email:$("signupEmail").value.trim(),password:$("signupPassword").value});await account.createVerification({url:location.origin+location.pathname+"?mode=verification"});showAuthMessage("Konti yawe yakozwe neza. Twohereje email yo kwemeza konti. Reba Inbox cyangwa Spam/Junk.");await updateAuthUI();closeAuth()}catch(err){showAuthMessage(err.message||"Signup yanze. Reba Appwrite Auth settings.")}finally{btn.disabled=false}});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{await account.createEmailPasswordSession({email:$("loginEmail").value.trim(),password:$("loginPassword").value});await updateAuthUI();closeAuth()}catch(err){showAuthMessage(err.message||"Login yanze.")}finally{btn.disabled=false}});
+$("forgotForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{const email=$("forgotEmail").value.trim();await account.createRecovery({email,url:location.origin+location.pathname+"?mode=recovery"});showAuthMessage("Twohereje link nshya yo guhindura password. Reba Inbox na Spam.")}catch(err){showAuthMessage("Kohereza reset link byanze: "+(err.message||"Ongera ugerageze."))}finally{btn.disabled=false}});
 $("resetForm").addEventListener("submit",async e=>{e.preventDefault();const p=$("newPassword").value,c=$("confirmPassword").value;if(p.length<8||p!==c){showAuthMessage("Password igomba kuba nibura inyuguti 8 kandi zombi zikaba zimwe.");return}const params=new URLSearchParams(location.search);const userId=params.get("userId"),secret=params.get("secret");if(!userId||!secret){showAuthMessage("Fungura link yo muri email ya Appwrite kugira ngo uhindure password.");return}try{await account.updateRecovery({userId,secret,password:p});history.replaceState({},document.title,location.pathname);showAuthForm("login");showAuthMessage("Password yahinduwe neza.")}catch(err){showAuthMessage(err.message)}});
 $("movieGrid").addEventListener("click",e=>{const btn=e.target.closest("button[data-action]");if(!btn)return;const movie=findMovie(btn.dataset.title);if(!movie)return;if(btn.dataset.action==="watch")openMovie(movie);if(btn.dataset.action==="series")openSeriesByTitle(movie.title);if(btn.dataset.action==="download")downloadMovie(movie)});
 $("episodeList").addEventListener("click",e=>{const w=e.target.closest("[data-episode]");const d=e.target.closest("[data-episode-download]");if(w)playEpisode(Number(w.dataset.episode));if(d){const ep=currentSeries.episodes[Number(d.dataset.episode)];const file=typeof ep==="string"?ep:ep.file;downloadUrl(ep.fileId?storageDownload(ep.fileId):filePath(file),`${currentSeries.title} Episode ${Number(d.dataset.episode)+1}`)}});
@@ -494,12 +463,18 @@ async function init(){
  try{await updateAuthUI()}catch(e){console.warn(e)}
  await loadCloudMovies();refreshPage();
  const params=new URLSearchParams(location.search);
- const userId=params.get("userId"),secret=params.get("secret");
- if(userId&&secret){
+ const userId=params.get("userId"),secret=params.get("secret"),mode=params.get("mode");
+ // Appwrite verification and recovery both return userId + secret.
+ // The explicit mode prevents a password-reset token being sent to updateVerification.
+ if(userId&&secret&&mode==="recovery"){
+   openAuth("resetForm");
+   showAuthMessage("Shyiramo password nshya kugira ngo urangize kuyihindura.");
+ }else if(userId&&secret&&mode==="verification"){
    try{await account.updateVerification({userId,secret});history.replaceState({},document.title,location.pathname);openAuth("login");showAuthMessage("Email yawe yemejwe neza. Ushobora kwinjira.");}
-   catch(error){openAuth("login");showAuthMessage("Kwemeza email byanze cyangwa link yararengeje igihe: "+error.message);}
+   catch(error){openAuth("login");showAuthMessage("Kwemeza email byanze. Saba indi verification link: "+error.message);}
+ }else if(params.has("recovery")||params.has("reset")){
+   openAuth("resetForm");
  }
- if(params.has("recovery")||params.has("reset"))openAuth("resetForm");
 }
 init();
 </script>
