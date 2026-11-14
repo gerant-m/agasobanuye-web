@@ -39,7 +39,7 @@ footer{text-align:center;padding:35px 15px;border-top:1px solid #292929;color:#a
 .auth-card h2{text-align:center;margin-bottom:8px}.auth-card>p{text-align:center;margin-bottom:20px}.auth-card form{display:none}.auth-card form.active{display:block}.auth-card h3{margin-bottom:15px}.auth-card label{display:block;margin:12px 0 6px;font-size:13px}
 .submit{width:100%;margin-top:17px;padding:12px;background:var(--red);border:0;border-radius:6px;color:white;font-weight:800}.auth-link{display:block;margin:12px auto 0;background:none;border:0;color:#ddd;text-decoration:underline}.close{position:absolute;right:14px;top:12px;background:none;border:0;color:white;font-size:20px}
 .message{display:none;margin-top:15px;padding:12px;border-radius:6px;background:#292929;color:#eee;font-size:13px;line-height:1.5}.message.show{display:block}
-.admin-panel{display:none;padding:35px 5%;background:#101010;border-top:2px solid var(--red)}.admin-panel.open{display:block}.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.admin-panel label{display:block;font-size:13px;margin:10px 0 5px}.admin-panel h2{margin-bottom:15px}.admin-panel .btn{margin-top:14px}.hint{color:#aaa;font-size:12px;line-height:1.6;margin:10px 0}
+.admin-panel{display:none;padding:35px 5%;background:#101010;border-top:2px solid var(--red);min-height:calc(100vh - 70px)}.admin-panel.open{display:block}body.admin-mode #homePage,body.admin-mode .page,body.admin-mode footer,body.admin-mode .whatsapp{display:none!important}body.admin-mode #adminPanel.open{display:block!important}.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.admin-panel label{display:block;font-size:13px;margin:10px 0 5px}.admin-panel h2{margin-bottom:15px}.admin-panel .btn{margin-top:14px}.hint{color:#aaa;font-size:12px;line-height:1.6;margin:10px 0}
 @media(max-width:1000px){.movie-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.poster{height:250px}}
 @media(max-width:720px){header{flex-wrap:wrap}.header-right{width:100%;flex-wrap:wrap}.search{width:100%;flex:1 1 100%}.hero{min-height:500px}.filters{grid-template-columns:repeat(2,1fr)}.movie-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.poster{height:235px}.episodes{grid-template-columns:1fr}.admin-grid{grid-template-columns:1fr}}
 </style>
@@ -186,20 +186,57 @@ function openAuth(form="signup"){$("authOverlay").classList.add("open");showAuth
 function closeAuth(){$("authOverlay").classList.remove("open")}
 function showAuthForm(form){document.querySelectorAll(".auth-card form").forEach(f=>f.classList.remove("active"));$(form==="signup"?"signupForm":form==="login"?"loginForm":form).classList.add("active");$("authMessage").classList.remove("show");$("authMessage").textContent=""}
 function showAdminMessage(message){$("adminMessage").textContent=message}
+function setPageForRole(){
+ const adminMode=Boolean(currentUser&&isAdmin);
+ document.body.classList.toggle("admin-mode",adminMode);
+ $("adminPanel").classList.toggle("open",adminMode);
+ if(adminMode){
+  $("homePage").style.display="none";
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  $("mainVideo").pause();$("episodeVideo").pause();
+  showAdminMessage("Winjiye nka admin. Ubu uri muri Admin Dashboard.");
+  window.scrollTo({top:0,behavior:"smooth"});
+ }else{
+  $("homePage").style.display="block";
+  $("adminPanel").classList.remove("open");
+ }
+}
 async function updateAuthUI(){
- try{currentUser=await account.get();$("authButtons").hidden=true;$("userAccount").hidden=false;$("userEmail").textContent=currentUser.email;await checkAdminAccess()}
- catch{$("authButtons").hidden=false;$("userAccount").hidden=true;currentUser=null;isAdmin=false;$("adminPanel").classList.remove("open")}
+ try{
+  currentUser=await account.get();
+  $("authButtons").hidden=true;
+  $("userAccount").hidden=false;
+  $("userEmail").textContent=currentUser.email;
+  await checkAdminAccess();
+ }catch{
+  currentUser=null;isAdmin=false;
+  $("authButtons").hidden=false;
+  $("userAccount").hidden=true;
+  setPageForRole();
+ }
 }
 async function checkAdminAccess(){
  isAdmin=false;
- try{const result=await teams.list();isAdmin=result.teams.some(t=>t.$id===APPWRITE_ADMIN_TEAM_ID)}
- catch(e){console.warn("Admin team check:",e)}
- $("adminPanel").classList.toggle("open",isAdmin);
- if(isAdmin)showAdminMessage("Winjiye nka admin. Ushobora kongeramo movie cyangwa series.");
+ if(currentUser){
+  try{
+   const result=await teams.list();
+   isAdmin=Array.isArray(result.teams)&&result.teams.some(t=>t.$id===APPWRITE_ADMIN_TEAM_ID);
+  }catch(e){console.warn("Admin team check:",e)}
+ }
+ setPageForRole();
 }
-async function logoutUser(){try{await account.deleteSession({sessionId:"current"});await updateAuthUI();closeAuth()}catch(e){showAuthMessage(e.message)}}
-$("signupForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{await account.create({userId:ID.unique(),email:$("signupEmail").value.trim(),password:$("signupPassword").value,name:"KEGAFILMS User"});await account.createEmailPasswordSession({email:$("signupEmail").value.trim(),password:$("signupPassword").value});await account.createVerification({url:location.origin+location.pathname});showAuthMessage("Konti yawe yakozwe neza. Twohereje email yo kwemeza konti. Reba Inbox cyangwa Spam/Junk.");await updateAuthUI()}catch(err){showAuthMessage(err.message||"Signup yanze. Reba Appwrite Auth settings.")}finally{btn.disabled=false}});
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{await account.createEmailPasswordSession({email:$("loginEmail").value.trim(),password:$("loginPassword").value});showAuthMessage("Winjiye neza.");await updateAuthUI()}catch(err){showAuthMessage(err.message||"Login yanze.")}finally{btn.disabled=false}});
+async function logoutUser(){
+ try{
+  await account.deleteSession({sessionId:"current"});
+  currentUser=null;isAdmin=false;
+  $("authButtons").hidden=false;$("userAccount").hidden=true;
+  $("userEmail").textContent="";
+  setPageForRole();
+  closeAuth();
+ }catch(e){showAuthMessage(e.message)}
+}
+$("signupForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{await account.create({userId:ID.unique(),email:$("signupEmail").value.trim(),password:$("signupPassword").value,name:"KEGAFILMS User"});await account.createEmailPasswordSession({email:$("signupEmail").value.trim(),password:$("signupPassword").value});await account.createVerification({url:location.origin+location.pathname});showAuthMessage("Konti yawe yakozwe neza. Twohereje email yo kwemeza konti. Reba Inbox cyangwa Spam/Junk.");await updateAuthUI();closeAuth()}catch(err){showAuthMessage(err.message||"Signup yanze. Reba Appwrite Auth settings.")}finally{btn.disabled=false}});
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{await account.createEmailPasswordSession({email:$("loginEmail").value.trim(),password:$("loginPassword").value});await updateAuthUI();closeAuth()}catch(err){showAuthMessage(err.message||"Login yanze.")}finally{btn.disabled=false}});
 $("forgotForm").addEventListener("submit",async e=>{e.preventDefault();try{await account.createRecovery({email:$("forgotEmail").value.trim(),url:location.origin+location.pathname});showAuthMessage("Reba email yawe kugira ngo uhindure password.")}catch(err){showAuthMessage(err.message)}});
 $("resetForm").addEventListener("submit",async e=>{e.preventDefault();const p=$("newPassword").value,c=$("confirmPassword").value;if(p.length<8||p!==c){showAuthMessage("Password igomba kuba nibura inyuguti 8 kandi zombi zikaba zimwe.");return}const params=new URLSearchParams(location.search);const userId=params.get("userId"),secret=params.get("secret");if(!userId||!secret){showAuthMessage("Fungura link yo muri email ya Appwrite kugira ngo uhindure password.");return}try{await account.updateRecovery({userId,secret,password:p});history.replaceState({},document.title,location.pathname);showAuthForm("login");showAuthMessage("Password yahinduwe neza.")}catch(err){showAuthMessage(err.message)}});
 $("movieGrid").addEventListener("click",e=>{const btn=e.target.closest("button[data-action]");if(!btn)return;const movie=findMovie(btn.dataset.title);if(!movie)return;if(btn.dataset.action==="watch")openMovie(movie);if(btn.dataset.action==="series")openSeriesByTitle(movie.title);if(btn.dataset.action==="download")downloadMovie(movie)});
