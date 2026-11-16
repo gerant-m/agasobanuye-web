@@ -299,7 +299,7 @@ function closeAuth(){$("authOverlay").classList.remove("open")}
 function showAuthForm(form){document.querySelectorAll(".auth-card form").forEach(f=>f.classList.remove("active"));$(form==="signup"?"signupForm":form==="login"?"loginForm":form).classList.add("active");$("authMessage").classList.remove("show");$("authMessage").textContent=""}
 function showAdminMessage(message){$("adminMessage").textContent=message}
 function setPageForRole(){
- const adminMode=Boolean(currentUser&&isAdmin);
+ const adminMode=Boolean(currentUser&&isAdmin&&APPWRITE_ADMIN_TEAM_ID);
  document.body.classList.toggle("admin-mode",adminMode);
  $("adminPanel").classList.toggle("open",adminMode);
  if(adminMode){
@@ -368,6 +368,7 @@ async function logoutUser(){
 }
 
 function showAdminView(view){
+ if(!currentUser||!isAdmin||!APPWRITE_ADMIN_TEAM_ID){setPageForRole();return}
  const ids={overview:"adminOverview",add:"adminAdd",library:"adminLibrary"};
  document.querySelectorAll(".admin-view").forEach(v=>v.classList.remove("active"));
  document.querySelectorAll(".admin-nav").forEach(v=>v.classList.toggle("active",v.dataset.adminView===view));
@@ -393,6 +394,7 @@ $("movieForm").addEventListener("reset",()=>{
  },0);
 });
 $("refreshLibrary").addEventListener("click",async()=>{
+ if(!currentUser||!isAdmin||!APPWRITE_ADMIN_TEAM_ID){showAdminMessage("Ntabwo ufite uburenganzira bwa admin.");return}
  const button=$("refreshLibrary");button.disabled=true;
  try{await loadCloudMovies();refreshPage();renderAdminDashboard();renderAdminLibrary();showAdminMessage("Catalogue refreshed.");}
  finally{button.disabled=false;}
@@ -428,6 +430,7 @@ function renderAdminLibrary(){
  $("adminLibraryList").innerHTML=list.length?list.map(adminMovieMarkup).join(""):'<div class="admin-empty">Nta film cyangwa series bihuye n’ishakisha.</div>';
 }
 $("adminLibraryList").addEventListener("click",async e=>{
+ if(!currentUser||!isAdmin||!APPWRITE_ADMIN_TEAM_ID){showAdminMessage("Ntabwo ufite uburenganzira bwa admin.");return}
  const edit=e.target.closest("[data-edit-row]"),del=e.target.closest("[data-delete-row]");
  if(edit){
   const movie=movies.find(m=>m.id===edit.dataset.editRow);if(!movie)return;
@@ -460,7 +463,8 @@ $("movieGrid").addEventListener("click",e=>{const btn=e.target.closest("button[d
 $("episodeList").addEventListener("click",e=>{const w=e.target.closest("[data-episode]");const d=e.target.closest("[data-episode-download]");if(w)playEpisode(Number(w.dataset.episode));if(d){const ep=currentSeries.episodes[Number(d.dataset.episode)];const file=typeof ep==="string"?ep:ep.file;downloadUrl(ep.fileId?storageDownload(ep.fileId):filePath(file),`${currentSeries.title} Episode ${Number(d.dataset.episode)+1}`)}});
 $("authOverlay").addEventListener("click",e=>{if(e.target===$("authOverlay"))closeAuth()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAuth()});
 async function uploadToStorage(file){
- if(!isAdmin||!APPWRITE_ADMIN_TEAM_ID)throw new Error("Admin Team ntiyemejwe. Ongera winjire nyuma yo kongerwa muri KEGAFILMS_ADMINS.");
+ if(!currentUser||!isAdmin||!APPWRITE_ADMIN_TEAM_ID)throw new Error("Admin Team ntiyemejwe. Ongera winjire nyuma yo kongerwa muri KEGAFILMS_ADMINS.");
+ if(file.size>50*1024*1024)throw new Error("Iyi file irengeje 50 MB. Appwrite Free Plan ntishobora kuyakira. Hitamo file ntoya cyangwa tuzashyireho ubundi buryo bwo kubika videos nini.");
  const result=await storage.createFile({bucketId:APPWRITE_BUCKET_ID,fileId:ID.unique(),file,permissions:[Permission.read(Role.any()),Permission.update(Role.team(APPWRITE_ADMIN_TEAM_ID)),Permission.delete(Role.team(APPWRITE_ADMIN_TEAM_ID))]});
  return result.$id;
 }
