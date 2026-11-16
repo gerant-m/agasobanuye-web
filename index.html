@@ -337,7 +337,7 @@ async function checkAdminAccess(){
    // Team ID ntabwo tuyikeka: tuyibona muri teams user ari member.
    const result=await teams.list();
    const memberships=Array.isArray(result.teams)?result.teams:[];
-   const adminTeam=memberships.find(t=>String(t.name||"").trim().toUpperCase()===APPWRITE_ADMIN_TEAM_NAME);
+   const adminTeam=memberships.find(t=>["KEGAFILMS_ADMINS","KEGAFILMS ADMIN","KEGAFILMS ADMINS"].includes(String(t.name||"").trim().toUpperCase().replace(/[_-]+/g," ").replace(/\s+/g," ")) || String(t.name||"").trim().toUpperCase()==="KEGAFILMS_ADMINS");
    if(adminTeam){
     APPWRITE_ADMIN_TEAM_ID=adminTeam.$id;
     isAdmin=true;
@@ -456,7 +456,22 @@ $("adminLibraryList").addEventListener("click",async e=>{
 function renderAdminDashboardAndLibrary(){renderAdminDashboard();renderAdminLibrary();}
 
 $("signupForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{await account.create({userId:ID.unique(),email:$("signupEmail").value.trim(),password:$("signupPassword").value,name:"KEGAFILMS User"});await account.createEmailPasswordSession({email:$("signupEmail").value.trim(),password:$("signupPassword").value});await account.createVerification({url:location.origin+location.pathname+"?mode=verification"});showAuthMessage("Konti yawe yakozwe neza. Twohereje email yo kwemeza konti. Reba Inbox cyangwa Spam/Junk.");await updateAuthUI();closeAuth()}catch(err){showAuthMessage(err.message||"Signup yanze. Reba Appwrite Auth settings.")}finally{btn.disabled=false}});
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{await account.createEmailPasswordSession({email:$("loginEmail").value.trim(),password:$("loginPassword").value});await updateAuthUI();closeAuth()}catch(err){showAuthMessage(err.message||"Login yanze.")}finally{btn.disabled=false}});
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const btn=e.currentTarget.querySelector("button[type=submit]");
+ btn.disabled=true;btn.textContent="Checking account...";
+ try{
+  await account.createEmailPasswordSession({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
+  await updateAuthUI();
+  if(currentUser&&isAdmin&&APPWRITE_ADMIN_TEAM_ID){
+   closeAuth();
+   showAdminView("overview");
+  }else{
+   showAuthMessage(adminAccessError||"Winjiye muri konti, ariko ntibyemejwe ko uri muri Admin Team. Reba Appwrite Teams > Members.");
+  }
+ }catch(err){showAuthMessage(err.message||"Login yanze.")}
+ finally{btn.disabled=false;btn.textContent="Login"}
+});
 $("forgotForm").addEventListener("submit",async e=>{e.preventDefault();const btn=e.currentTarget.querySelector("button[type=submit]");btn.disabled=true;try{const email=$("forgotEmail").value.trim();await account.createRecovery({email,url:location.origin+location.pathname+"?mode=recovery"});showAuthMessage("Twohereje link nshya yo guhindura password. Reba Inbox na Spam.")}catch(err){showAuthMessage("Kohereza reset link byanze: "+(err.message||"Ongera ugerageze."))}finally{btn.disabled=false}});
 $("resetForm").addEventListener("submit",async e=>{e.preventDefault();const p=$("newPassword").value,c=$("confirmPassword").value;if(p.length<8||p!==c){showAuthMessage("Password igomba kuba nibura inyuguti 8 kandi zombi zikaba zimwe.");return}const params=new URLSearchParams(location.search);const userId=params.get("userId"),secret=params.get("secret");if(!userId||!secret){showAuthMessage("Fungura link yo muri email ya Appwrite kugira ngo uhindure password.");return}try{await account.updateRecovery({userId,secret,password:p});history.replaceState({},document.title,location.pathname);showAuthForm("login");showAuthMessage("Password yahinduwe neza.")}catch(err){showAuthMessage(err.message)}});
 $("movieGrid").addEventListener("click",e=>{const btn=e.target.closest("button[data-action]");if(!btn)return;const movie=findMovie(btn.dataset.title);if(!movie)return;if(btn.dataset.action==="watch")openMovie(movie);if(btn.dataset.action==="series")openSeriesByTitle(movie.title);if(btn.dataset.action==="download")downloadMovie(movie)});
@@ -526,4 +541,3 @@ init();
 </script>
 </body>
 </html>
-
