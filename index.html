@@ -1734,61 +1734,147 @@ body.admin-mode #adminPanel.open {
 
   </section>
 <section class="admin-view" id="adminAdd">
-    <div class="admin-section-head"><div><h2 id="adminFormHeading">Add new content</h2><p>Fill in the details, upload the poster and publish.</p></div></div>
-    <form id="movieForm" class="admin-form-card">
-     <div class="admin-form-grid">
-      <div><label>Movie / Series Title</label><input id="admTitle" required placeholder="Urugero: NEW MOVIE"></div>
-      <div><label>Content type</label><select id="admType"><option value="movie">Movie</option><option value="series">Series</option></select></div>
-      <div><label>Release year</label><input id="admYear" type="number" min="1900" max="2100" required value="2026"></div>
-
-<div>
-  <label>Genre</label>
-  <select id="admGenre" required></select>
+   <div class="admin-section-head">
+  <div>
+    <span class="admin-kicker">CONTENT MANAGEMENT</span>
+    <h2 id="adminFormHeading">Add New Content</h2>
+    <p>Enter your movie or series information below.</p>
+  </div>
 </div>
 
-<div>
-  <label>Interpreter</label>
-  <select id="admInterpreter" required></select>
+<form id="movieForm" class="admin-form-card">
+
+  <div class="admin-form-intro">
+    <i class="fa-solid fa-film"></i>
+    <div>
+      <strong>Content Information</strong>
+      <small>Complete all required fields before publishing.</small>
+    </div>
+  </div>
+
+  <div class="admin-form-grid">
+
+    <div>
+      <label for="admTitle">Movie / Series Title</label>
+      <input id="admTitle" required placeholder="Urugero: NEW MOVIE">
+    </div>
+
+    <div>
+      <label for="admType">Content Type</label>
+      <select id="admType">
+        <option value="movie">Movie</option>
+        <option value="series">Series</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="admYear">Release Year</label>
+      <input id="admYear" type="number" min="1900" max="2100" required value="2026">
+    </div>
+
+    <div>
+      <label for="admGenre">Genre</label>
+      <select id="admGenre" required></select>
+    </div>
+
+    <div>
+      <label for="admInterpreter">Interpreter</label>
+      <select id="admInterpreter" required></select>
+    </div>
+
+    <div>
+      <label for="admCountry">Country</label>
+      <select id="admCountry" required>
+        <option value="">Hitamo igihugu</option>
+        <option>United States</option>
+        <option>United Kingdom</option>
+        <option>South Korea</option>
+        <option>Turkey</option>
+        <option>India</option>
+        <option>Spain</option>
+        <option>Japan</option>
+        <option>China</option>
+        <option>Thailand</option>
+        <option>Nigeria</option>
+        <option>France</option>
+        <option>Germany</option>
+        <option>Canada</option>
+        <option>Brazil</option>
+        <option>Mexico</option>
+        <option>Italy</option>
+        <option>Australia</option>
+        <option>Taiwan</option>
+        <option>Philippines</option>
+        <option>South Africa</option>
+      </select>
+    </div>
 </div>
 
-<div>
-  <label>Country</label>
-  <select id="admCountry" required>
-    <option value="">Hitamo igihugu</option>
-    <option>United States</option>
-    <option>United Kingdom</option>
-    <option>South Korea</option>
-    <option>Turkey</option>
-    <option>India</option>
-    <option>Spain</option>
-    <option>Japan</option>
-    <option>China</option>
-    <option>Thailand</option>
-    <option>Nigeria</option>
-    <option>France</option>
-    <option>Germany</option>
-    <option>Canada</option>
-    <option>Brazil</option>
-    <option>Mexico</option>
-    <option>Italy</option>
-    <option>Australia</option>
-    <option>Taiwan</option>
-    <option>Philippines</option>
-    <option>South Africa</option>
-  </select>
-</div>
 
+	    <!-- MEDIA UPLOAD -->
+    <div class="admin-upload-heading">
+      <i class="fa-solid fa-cloud-arrow-up"></i>
+      <div>
+        <strong>Media Upload</strong>
+        <small>Add poster and video files for your content.</small>
+      </div>
+    </div>
 
-		 
-    
-      <div><label>Poster image</label><input id="admPoster" type="file" accept="image/*" required></div>
-      <div id="adminVideoField"><label>Movie video</label><input id="admVideo" type="file" accept="video/*"></div>
-      <div id="adminEpisodesField" hidden><label>Series episodes (select multiple videos)</label><input id="admEpisodes" type="file" accept="video/*" multiple></div>
-     </div>
-     <label>Description</label><textarea id="admDescription" rows="4" placeholder="Ibisobanuro bya film..."></textarea>
-     <div class="admin-form-actions"><button class="btn primary" type="submit" id="saveMovieBtn"><i class="fa-solid fa-cloud-arrow-up"></i> Upload & Publish</button><button class="btn dark-btn" type="reset" id="cancelEditBtn">Clear form</button></div>
-     <p class="hint" id="adminMessage" role="status"></p>
-    </form>
+    <div class="admin-form-grid">
+
+      <div class="admin-upload-field">
+        <label for="admPoster">
+          <i class="fa-solid fa-image"></i> Poster Image
+        </label>
+        <input id="admPoster" type="file" accept="image/*" required>
+        <small>Choose a movie or series poster.</small>
+      </div>
+
+      <div class="admin-upload-field" id="adminVideoField">
+        <label for="admVideo">
+          <i class="fa-solid fa-video"></i> Movie Video
+        </label>
+        <input id="admVideo" type="file" accept="video/*">
+        <small>Select the movie video file.</small>
+      </div>
+
+      <div class="admin-upload-field" id="adminEpisodesField" hidden>
+        <label for="admEpisodes">
+          <i class="fa-solid fa-photo-film"></i> Series Episodes
+        </label>
+        <input id="admEpisodes" type="file" accept="video/*" multiple>
+        <small>You can select multiple episode videos.</small>
+      </div>
+
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="admin-description-field">
+      <label for="admDescription">
+        <i class="fa-solid fa-align-left"></i> Description
+      </label>
+      <textarea id="admDescription" rows="4"
+        placeholder="Andika ibisobanuro bya film cyangwa series..."></textarea>
+    </div>
+
+    <!-- FORM ACTIONS -->
+    <div class="admin-form-actions">
+
+      <button class="btn primary" type="submit" id="saveMovieBtn">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        Upload & Publish
+      </button>
+
+      <button class="btn dark-btn" type="reset" id="cancelEditBtn">
+        <i class="fa-solid fa-rotate-left"></i>
+        Clear Form
+      </button>
+
+    </div>
+
+    <p class="hint" id="adminMessage" role="status"></p>
+
+  </form>
    </section>
    <section class="admin-view" id="adminLibrary">
     <div class="admin-section-head"><div><h2>Content library</h2><p>Find and review the movies and series on your website.</p></div><button class="admin-text-btn" id="refreshLibrary"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
