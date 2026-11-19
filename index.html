@@ -1685,15 +1685,55 @@ body.admin-mode #adminPanel.open {
       </article>
 
     </div>
-    <div class="admin-section-head"><div><h2>Quick actions</h2><p>Add new content or manage your catalogue.</p></div></div>
-    <div class="admin-quick-actions">
-     <button class="admin-quick" data-admin-view="add"><i class="fa-solid fa-plus"></i><span><b>Publish new content</b><small>Upload a movie or a series</small></span><i class="fa-solid fa-arrow-right"></i></button>
-     <button class="admin-quick" data-admin-view="library"><i class="fa-solid fa-list"></i><span><b>Manage catalogue</b><small>Review content already published</small></span><i class="fa-solid fa-arrow-right"></i></button>
+       <!-- QUICK ACTIONS -->
+    <div class="admin-section-head">
+      <div>
+        <span class="admin-kicker">SHORTCUTS</span>
+        <h2>Quick Actions</h2>
+        <p>Manage your KEGAFILMS content easily.</p>
+      </div>
     </div>
-    <div class="admin-section-head"><div><h2>Recently added</h2><p>Your latest content on KEGAFILMS.</p></div><button class="admin-text-btn" data-admin-view="library">View library <i class="fa-solid fa-arrow-right"></i></button></div>
+
+    <div class="admin-quick-actions">
+
+      <button class="admin-quick" data-admin-view="add">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <span>
+          <b>Publish New Content</b>
+          <small>Upload a movie or a series</small>
+        </span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+      <button class="admin-quick" data-admin-view="library">
+        <i class="fa-solid fa-photo-film"></i>
+        <span>
+          <b>Manage Content Library</b>
+          <small>Review, edit or delete published content</small>
+        </span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+    </div>
+
+    <!-- RECENTLY ADDED -->
+    <div class="admin-section-head">
+      <div>
+        <span class="admin-kicker">CONTENT UPDATES</span>
+        <h2>Recently Added</h2>
+        <p>Your latest movies and series on KEGAFILMS.</p>
+      </div>
+
+      <button class="admin-text-btn" data-admin-view="library">
+        View All 
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
     <div id="adminRecent" class="admin-recent"></div>
-   </section>
-   <section class="admin-view" id="adminAdd">
+
+  </section>
+<section class="admin-view" id="adminAdd">
     <div class="admin-section-head"><div><h2 id="adminFormHeading">Add new content</h2><p>Fill in the details, upload the poster and publish.</p></div></div>
     <form id="movieForm" class="admin-form-card">
      <div class="admin-form-grid">
