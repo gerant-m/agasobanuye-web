@@ -1314,13 +1314,15 @@ body.admin-mode #adminPanel.open {
   <a href="#moviesSection" onclick="scrollToMovies();return false">Series</a>
   <a href="#aboutSection">About</a>
 </nav>
-
 <div class="header-right">
 	
 <div class="header-right">
 <div class="search"><input id="searchInput" type="search" placeholder="Shakisha movie cyangwa series..." oninput="applyFilters()"></div>
-<div class="auth-buttons" id="authButtons"><button class="small-btn red-btn" onclick="openAuth('signup')"><i class="fa-solid fa-user-plus"></i> Sign Up</button></div>
-<div class="user-account" id="userAccount" hidden><span id="userEmail"></span><button class="small-btn" onclick="logoutUser()">Logout</button></div>
+<div class="auth-buttons" id="authButtons" hidden></div>
+
+<div class="user-account" id="userAccount" hidden>
+  <span id="userEmail"></span>
+  <button class="small-btn" onclick="logoutUser()">Logout</button>
 </div>
 </header>
 <main id="homePage">
@@ -1454,6 +1456,11 @@ body.admin-mode #adminPanel.open {
  </div>
 </section>
 <footer><h2>KEGA<span class="red">FILMS</span>.NET</h2><p>Movies & Series in Kinyarwanda</p><p><a href="https://www.instagram.com/kega_update/" target="_blank" rel="noopener">Instagram</a> | <a href="https://www.youtube.com/channel/UCtpthNrp5wuGa2PbFQPTGKg" target="_blank" rel="noopener">YouTube</a></p><p>© 2026 KEGAFILMS.NET. All Rights Reserved.</p></footer>
+	<p>
+  <button class="small-btn red-btn" onclick="openAuth('login')">
+    <i class="fa-solid fa-lock"></i> Admin Login
+  </button>
+</p>
 <a class="whatsapp" href="https://wa.me/250794186614" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <div class="overlay" id="authOverlay"><div class="auth-overlay-brand"></div><div class="auth-card"><button class="close" onclick="closeAuth()" aria-label="Close">✕</button><div class="auth-brand-mark">KEGA<span>FILMS</span><small style="font-size:10px;color:#777;letter-spacing:1px">.NET</small></div><div class="auth-welcome-kicker">YOUR MOVIE EXPERIENCE STARTS HERE</div><h2 class="auth-title">Sign in to KEGAFILMS</h2><p class="auth-subtitle">Discover the best movies and series, beautifully translated into Kinyarwanda. Create your account and enjoy the experience.</p>
 <form id="signupForm" class="active"><h3>Create your free account</h3><label>Email</label><input id="signupEmail" type="email" autocomplete="email" required placeholder="you@example.com"><label>Password (nibura inyuguti 8)</label><input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required><button class="submit" type="submit">Create Account</button><button class="auth-link" type="button" onclick="showAuthForm('login')">Already have an account? Sign in</button></form>
@@ -1794,7 +1801,7 @@ async function init(){
  refreshPage();
  try{await updateAuthUI()}catch(e){console.warn(e)}
  if(!currentUser){await loadCloudMovies();refreshPage();}
- if(!currentUser){openAuth("signup");}
+ 
  const params=new URLSearchParams(location.search);
  const userId=params.get("userId"),secret=params.get("secret"),mode=params.get("mode");
  // Appwrite verification and recovery both return userId + secret.
