@@ -294,7 +294,7 @@ section.content {
 /* FILTERS */
 .filters {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 22px;
 }
@@ -1288,7 +1288,32 @@ body.admin-mode #adminPanel.open {
 <section class="hero"><div class="hero-content"><div class="eyebrow">Welcome to KEGAFILMS</div><h1>Watch <span class="red">agasobanuye</span></h1><p>Reba movies na series zasobanuwe mu Kinyarwanda. Hitamo film ukunda, uyirebe cyangwa uyikuremo.</p><div class="actions"><button class="btn primary" onclick="scrollToMovies()"><i class="fa-solid fa-play"></i> Browse Movies</button><button class="btn secondary" onclick="scrollToTrending()"><i class="fa-solid fa-fire"></i> Trending</button></div><div class="support"><strong><i class="fa-solid fa-heart red"></i> Support KEGAFILMS</strong><p>Ushobora kudufasha gukomeza kongera movies nshya.</p><button class="btn dark-btn" style="margin-top:12px" onclick="showMobileMoney()">Mobile Money</button></div></div></section>
 <section class="content" id="trendingSection"><h2 class="section-heading"><span class="red">🔥</span> Trending Movies</h2><div class="trending" id="trendingList"></div></section>
 <section class="content" id="moviesSection"><h2 class="section-heading">WATCH <span class="red">MOVIES</span></h2>
-<div class="filters"><select id="yearFilter" onchange="applyFilters()"><option value="">All Years</option></select><select id="genreFilter" onchange="applyFilters()"><option value="">All Genres</option></select><select id="interpreterFilter" onchange="applyFilters()"><option value="">All Interpreters</option></select><select id="sortFilter" onchange="applyFilters()"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="az">Title A-Z</option></select></div>
+
+<div class="filters">
+  <select id="yearFilter" onchange="applyFilters()">
+    <option value="">All Years</option>
+  </select>
+
+  <select id="genreFilter" onchange="applyFilters()">
+    <option value="">All Genres</option>
+  </select>
+
+  <select id="interpreterFilter" onchange="applyFilters()">
+    <option value="">All Interpreters</option>
+  </select>
+
+  <select id="countryFilter" onchange="applyFilters()">
+    <option value="">All Countries</option>
+  </select>
+
+  <select id="sortFilter" onchange="applyFilters()">
+    <option value="newest">Newest first</option>
+    <option value="oldest">Oldest first</option>
+    <option value="az">Title A-Z</option>
+  </select>
+</div>
+
+	
 <div class="tabs"><button class="tab active" id="tabAll" onclick="setCategory('all',this)">All</button><button class="tab" onclick="setCategory('movie',this)">Movies</button><button class="tab" onclick="setCategory('series',this)">Series</button><button class="tab" onclick="resetFilters()">Reset</button></div>
 <div class="movie-grid" id="movieGrid"></div><div class="empty" id="emptyMessage">Nta film ibonetse. Gerageza gushaka izindi.</div>
 </section></main>
@@ -1331,8 +1356,47 @@ body.admin-mode #adminPanel.open {
       <div><label>Movie / Series Title</label><input id="admTitle" required placeholder="Urugero: NEW MOVIE"></div>
       <div><label>Content type</label><select id="admType"><option value="movie">Movie</option><option value="series">Series</option></select></div>
       <div><label>Release year</label><input id="admYear" type="number" min="1900" max="2100" required value="2026"></div>
-      <div><label>Genre</label><input id="admGenre" required placeholder="Action, Horror..."></div>
-      <div><label>Interpreter</label><input id="admInterpreter" required placeholder="Umusobanuzi"></div>
+
+<div>
+  <label>Genre</label>
+  <select id="admGenre" required></select>
+</div>
+
+<div>
+  <label>Interpreter</label>
+  <select id="admInterpreter" required></select>
+</div>
+
+<div>
+  <label>Country</label>
+  <select id="admCountry" required>
+    <option value="">Hitamo igihugu</option>
+    <option>United States</option>
+    <option>United Kingdom</option>
+    <option>South Korea</option>
+    <option>Turkey</option>
+    <option>India</option>
+    <option>Spain</option>
+    <option>Japan</option>
+    <option>China</option>
+    <option>Thailand</option>
+    <option>Nigeria</option>
+    <option>France</option>
+    <option>Germany</option>
+    <option>Canada</option>
+    <option>Brazil</option>
+    <option>Mexico</option>
+    <option>Italy</option>
+    <option>Australia</option>
+    <option>Taiwan</option>
+    <option>Philippines</option>
+    <option>South Africa</option>
+  </select>
+</div>
+
+
+		 
+    
       <div><label>Poster image</label><input id="admPoster" type="file" accept="image/*" required></div>
       <div id="adminVideoField"><label>Movie video</label><input id="admVideo" type="file" accept="video/*"></div>
       <div id="adminEpisodesField" hidden><label>Series episodes (select multiple videos)</label><input id="admEpisodes" type="file" accept="video/*" multiple></div>
