@@ -89,7 +89,25 @@ header {
   align-items: center;
   gap: 12px;
 }
+.main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex: 1;
+}
 
+.main-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color .3s ease;
+}
+
+.main-nav a:hover {
+  color: #e50914;
+}
 .user-account span {
   max-width: 150px;
   overflow: hidden;
@@ -1181,7 +1199,18 @@ body.admin-mode #adminPanel.open {
     width: 100%;
     flex: 1 1 100%;
   }
+.main-nav {
+  order: 3;
+  width: 100%;
+  flex: 1 1 100%;
+  justify-content: space-around;
+  gap: 10px;
+  padding: 10px 0 4px;
+}
 
+.main-nav a {
+  font-size: 13px;
+}
   .hero {
     min-height: 540px;
     padding: 75px 5%;
@@ -1278,6 +1307,16 @@ body.admin-mode #adminPanel.open {
 <body>
 <header>
 <a href="#" class="logo" onclick="goHome();return false">KEGA<span>FILMS</span>.NET</a>
+
+<nav class="main-nav">
+  <a href="#" onclick="goHome();return false">Home</a>
+  <a href="#moviesSection" onclick="scrollToMovies();return false">Movies</a>
+  <a href="#moviesSection" onclick="scrollToMovies();return false">Series</a>
+  <a href="#aboutSection">About</a>
+</nav>
+
+<div class="header-right">
+	
 <div class="header-right">
 <div class="search"><input id="searchInput" type="search" placeholder="Shakisha movie cyangwa series..." oninput="applyFilters()"></div>
 <div class="auth-buttons" id="authButtons"><button class="small-btn red-btn" onclick="openAuth('signup')"><i class="fa-solid fa-user-plus"></i> Sign Up</button></div>
