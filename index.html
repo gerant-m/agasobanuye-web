@@ -1599,12 +1599,39 @@ body.admin-mode #adminPanel.open {
   <i class="fa-solid fa-user-shield"></i>
   <span id="adminIdentity">Admin account</span>
 </div>
- <div class="admin-layout">
+<div class="admin-layout">
   <aside class="admin-sidebar">
-   <button class="admin-nav active" data-admin-view="overview"><i class="fa-solid fa-chart-pie"></i> Overview</button>
-   <button class="admin-nav" data-admin-view="add"><i class="fa-solid fa-cloud-arrow-up"></i> Add movie / series</button>
-   <button class="admin-nav" data-admin-view="library"><i class="fa-solid fa-photo-film"></i> Content library</button>
-   <div class="admin-sidebar-note"><i class="fa-solid fa-lock"></i><span>Admin access is managed by Appwrite Team membership.</span></div>
+
+    <div class="admin-sidebar-heading">
+      <span>MAIN MENU</span>
+    </div>
+
+    <button class="admin-nav active" data-admin-view="overview">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>Overview</span>
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <button class="admin-nav" data-admin-view="add">
+      <i class="fa-solid fa-cloud-arrow-up"></i>
+      <span>Add Movie / Series</span>
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <button class="admin-nav" data-admin-view="library">
+      <i class="fa-solid fa-photo-film"></i>
+      <span>Content Library</span>
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <div class="admin-sidebar-note">
+      <i class="fa-solid fa-shield-halved"></i>
+      <div>
+        <strong>SECURE ADMIN</strong>
+        <span>Admin access is managed by Appwrite Team membership.</span>
+      </div>
+    </div>
+
   </aside>
   <div class="admin-main">
    <section class="admin-view active" id="adminOverview">
