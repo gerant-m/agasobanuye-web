@@ -1141,6 +1141,221 @@ body.admin-mode #adminPanel.open {
   font-size: 13px;
   line-height: 1.6;
 }
+/* KEGAFILMS PRO ADMIN DESIGN */
+.admin-panel {
+  padding: 38px 4%;
+  background:
+    radial-gradient(ellipse at 90% 0%, rgba(229,9,20,.09), transparent 35%),
+    #080808;
+}
+
+.admin-topbar {
+  padding-bottom: 22px;
+  border-bottom: 1px solid #292929;
+}
+
+.admin-kicker {
+  color: #ff303b;
+  letter-spacing: 3px;
+}
+
+.admin-topbar h1 {
+  font-size: clamp(27px, 4vw, 39px);
+  letter-spacing: -1.5px;
+}
+
+.admin-identity {
+  background: #171717;
+  border: 1px solid #3a292a;
+  box-shadow: 0 5px 20px rgba(0,0,0,.25);
+}
+
+.admin-layout {
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.admin-sidebar {
+  background: linear-gradient(180deg, #171717, #101010);
+  border: 1px solid #303030;
+  border-radius: 15px;
+  padding: 13px;
+  box-shadow: 0 12px 35px rgba(0,0,0,.25);
+}
+
+.admin-nav {
+  padding: 15px 13px;
+  border-radius: 9px;
+  transition: .25s ease;
+}
+
+.admin-nav:hover {
+  background: #251416;
+  transform: translateX(3px);
+}
+
+.admin-nav.active {
+  background: linear-gradient(100deg, #501519, #241315);
+  border: 1px solid #632126;
+}
+
+.admin-welcome {
+  min-height: 175px;
+  padding: 32px;
+  background:
+    radial-gradient(circle at 85% 30%, rgba(229,9,20,.28), transparent 35%),
+    linear-gradient(115deg, #251113, #111);
+  border: 1px solid #552126;
+  box-shadow: 0 15px 40px rgba(0,0,0,.2);
+}
+
+.admin-welcome > i {
+  font-size: 65px;
+  filter: drop-shadow(0 0 18px rgba(229,9,20,.35));
+}
+
+.admin-stat {
+  position: relative;
+  overflow: hidden;
+  min-height: 135px;
+  padding: 22px;
+  background: linear-gradient(145deg, #1b1b1b, #101010);
+  border: 1px solid #303030;
+  border-radius: 13px;
+  transition: .25s ease;
+}
+
+.admin-stat:hover {
+  transform: translateY(-4px);
+  border-color: #713036;
+  box-shadow: 0 12px 30px rgba(0,0,0,.3);
+}
+
+.admin-stat strong {
+  font-size: 34px;
+  letter-spacing: -1px;
+}
+
+.admin-quick {
+  min-height: 85px;
+  background: linear-gradient(120deg, #1b1b1b, #111);
+  border: 1px solid #303030;
+  border-radius: 12px;
+  transition: .25s ease;
+}
+
+.admin-quick:hover {
+  border-color: var(--red);
+  background: #211416;
+  transform: translateY(-3px);
+}
+
+.admin-recent-item,
+.admin-library-item {
+  padding: 15px;
+  background: linear-gradient(110deg, #191919, #111);
+  border: 1px solid #303030;
+  border-radius: 11px;
+  transition: .2s ease;
+}
+
+.admin-recent-item:hover,
+.admin-library-item:hover {
+  border-color: #713036;
+  background: #1d1717;
+}
+
+.admin-thumb {
+  width: 62px;
+  height: 78px;
+  border: 1px solid #383838;
+  border-radius: 7px;
+}
+
+.admin-pill {
+  background: #391619;
+  border: 1px solid #632329;
+  color: #ff6972;
+  letter-spacing: .5px;
+}
+
+.admin-form-card {
+  padding: 28px;
+  background: linear-gradient(145deg, #191919, #101010);
+  border: 1px solid #333;
+  border-radius: 14px;
+}
+
+.admin-form-card input,
+.admin-form-card select,
+.admin-form-card textarea {
+  border-radius: 8px;
+}
+
+.admin-form-card input:focus,
+.admin-form-card select:focus,
+.admin-form-card textarea:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(229,9,20,.10);
+}
+
+.admin-icon-btn {
+  transition: .2s ease;
+}
+
+.admin-icon-btn:hover {
+  border-color: var(--red);
+  color: white;
+}
+
+.admin-icon-btn.delete:hover {
+  background: #491719;
+  border-color: #e50914;
+}
+
+.admin-empty {
+  padding: 40px 20px;
+  border-radius: 12px;
+  background: #141414;
+}
+
+@media(max-width: 900px) {
+  .admin-sidebar {
+    border-radius: 10px;
+  }
+
+  .admin-nav:hover {
+    transform: none;
+  }
+}
+
+@media(max-width: 600px) {
+  .admin-panel {
+    padding: 25px 4%;
+  }
+
+  .admin-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-welcome {
+    padding: 22px;
+  }
+
+  .admin-welcome > i {
+    font-size: 42px;
+  }
+
+  .admin-stat strong {
+    font-size: 27px;
+  }
+
+  .admin-form-card {
+    padding: 17px;
+  }
+}
+
 
 /* RESPONSIVE DESIGN */
 @media(max-width: 1100px) {
@@ -1363,9 +1578,27 @@ body.admin-mode #adminPanel.open {
 <section class="page" id="episodePage"><div class="player"><button class="btn dark-btn back" onclick="backToSeries()">← Back to Episodes</button><video id="episodeVideo" controls playsinline preload="metadata"></video><h1 id="episodeTitle"></h1><button class="btn primary" id="episodeDownloadButton">Download Episode</button></div></section>
 <section class="admin-panel" id="adminPanel">
  <div class="admin-topbar">
-  <div><div class="admin-kicker">KEGAFILMS CONTROL CENTER</div><h1><i class="fa-solid fa-shield-halved red"></i> Admin Dashboard</h1><p class="hint">Murakaza neza. Genzura films, series n'ibiri kuri platform yawe.</p></div>
-  <div class="admin-identity"><span class="admin-live-dot"></span><span id="adminIdentity">Admin account</span></div>
- </div>
+  <div>
+  <div class="admin-kicker">
+    <i class="fa-solid fa-circle-play"></i>
+    KEGAFILMS PRO CONTROL CENTER
+  </div>
+
+  <h1>
+    <i class="fa-solid fa-shield-halved red"></i>
+    Admin Dashboard
+  </h1>
+
+  <p class="hint">
+    Murakaza neza. Genzura films, series n'ibiri kuri platform yawe.
+  </p>
+</div>
+
+<div class="admin-identity">
+  <span class="admin-live-dot"></span>
+  <i class="fa-solid fa-user-shield"></i>
+  <span id="adminIdentity">Admin account</span>
+</div>
  <div class="admin-layout">
   <aside class="admin-sidebar">
    <button class="admin-nav active" data-admin-view="overview"><i class="fa-solid fa-chart-pie"></i> Overview</button>
